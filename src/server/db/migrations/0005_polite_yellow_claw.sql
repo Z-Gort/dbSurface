@@ -1,0 +1,2 @@
+ALTER TABLE "users" ADD COLUMN "active_db" uuid;--> statement-breakpoint
+ALTER TABLE "users" ADD CONSTRAINT "users_active_db_databases_database_id_fk" FOREIGN KEY ("active_db") REFERENCES "public"."databases"("database_id") ON DELETE set null ON UPDATE no action;

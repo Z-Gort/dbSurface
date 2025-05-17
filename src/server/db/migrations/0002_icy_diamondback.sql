@@ -1,0 +1,1 @@
+-- ALTER TABLE "projections" ADD COLUMN "extent" jsonb NOT NULL;

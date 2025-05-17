@@ -1,0 +1,2 @@
+ALTER TABLE "two_dim_embeddings" ALTER COLUMN "x" SET DATA TYPE double precision USING "x"::double precision;--> statement-breakpoint
+ALTER TABLE "two_dim_embeddings" ALTER COLUMN "y" SET DATA TYPE double precision USING "y"::double precision;

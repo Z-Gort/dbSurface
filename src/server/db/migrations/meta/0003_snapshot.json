@@ -1,0 +1,224 @@
+{
+  "id": "392edf3f-e1c4-4fc2-a305-3b4a38a5537b",
+  "prevId": "ee16540f-2237-4762-ab48-3f4c18325600",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.projections": {
+      "name": "projections",
+      "schema": "",
+      "columns": {
+        "projection_id": {
+          "name": "projection_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_dim_DB": {
+          "name": "high_dim_DB",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_dim_schema": {
+          "name": "high_dim_schema",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_dim_table": {
+          "name": "high_dim_table",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_dim_column": {
+          "name": "high_dim_column",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number_points": {
+          "name": "number_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "extent": {
+          "name": "extent",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{\"xmin\":0,\"ymin\":0,\"xmax\":0,\"ymax\":0}'::jsonb"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projections_user_id_users_user_id_fk": {
+          "name": "projections_user_id_users_user_id_fk",
+          "tableFrom": "projections",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.two_dim_embeddings": {
+      "name": "two_dim_embeddings",
+      "schema": "",
+      "columns": {
+        "two_dim_embedding_id": {
+          "name": "two_dim_embedding_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "projection_id": {
+          "name": "projection_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "high_dim_id": {
+          "name": "high_dim_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "x": {
+          "name": "x",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "y": {
+          "name": "y",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "two_dim_embeddings_projection_id_projections_projection_id_fk": {
+          "name": "two_dim_embeddings_projection_id_projections_projection_id_fk",
+          "tableFrom": "two_dim_embeddings",
+          "tableTo": "projections",
+          "columnsFrom": [
+            "projection_id"
+          ],
+          "columnsTo": [
+            "projection_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "two_dim_embeddings_high_dim_id_unique": {
+          "name": "two_dim_embeddings_high_dim_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "high_dim_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

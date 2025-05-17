@@ -1,0 +1,1 @@
+ALTER TABLE "projections" ALTER COLUMN "status" SET DEFAULT 'creating';

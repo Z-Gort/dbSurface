@@ -1,0 +1,1 @@
+ALTER TABLE "projections" ADD COLUMN "number_points" integer NOT NULL;

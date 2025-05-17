@@ -1,0 +1,1 @@
+ALTER TABLE "projections" ADD COLUMN "columns" text[] DEFAULT '{}'::text[] NOT NULL;

@@ -1,0 +1,1 @@
+-- ALTER TABLE "projections" ALTER COLUMN "extent" SET DEFAULT '{"xmin":0,"ymin":0,"xmax":0,"ymax":0}'::jsonb;
