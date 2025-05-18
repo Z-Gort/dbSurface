@@ -19,7 +19,7 @@
 
 ### Support
 
-If you're missing a feature or have found a bug, please open a
+If you're missing a feature, have a question, or have found a bug, please open a
 [GitHub Issue](https://github.com/Z-Gort/dbSurface/issues/new).
 
 ### Notes on Projection Creation
