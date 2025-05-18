@@ -28,7 +28,7 @@ How long projection creation takes depends mostly on the restricted connection s
 
 We have tested with about 30 concurrent connections you can achieve ~25 minute creation on 2 million rows, but if you are able to set concurrent connections higher you can reduce this. 
 
-Also ensure before creating a projection your restricted connection is not being used for any critical tasks, and note modifying your schema while a projection is being created may cause creation failure.
+Also note modifying your schema while a projection is being created may cause creation failure.
 
 ## License
 
