@@ -157,13 +157,19 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
             <DialogTitle>Create Projection</DialogTitle>
             <DialogDescription asChild>
               <div className="space-y-2">
-                <p>Select a table with a vector column to make a projection.</p>
+                <p className="text-sm text-gray-500">
+                  Select a table with a vector column to make a projection.
+                </p>
                 <p>
-                  {" "}
-                  <span className="font-semibold">Note:</span> This can take a
-                  few minutes. Modifying your table schema while the projection
-                  is being created may cause issues. Ensure that your database
-                  is prepared to have the full vector table queried.
+                  (This can take a few minutes.){" "}
+                  <a
+                    href="https://github.com/Z-Gort/dbSurface#learn-more"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    More details
+                  </a>
                 </p>
               </div>
             </DialogDescription>

@@ -106,6 +106,8 @@ def upload_to_supabase(local_path, remote_path, supabase, bucket="quadtree-tiles
     for attempt in range(4):
         try:
             supabase.storage.from_(bucket).upload(remote_path, local_path)
+            break
         except Exception as e:
             print("failed to upload to supabase", e)
-    supabase.storage.from_(bucket).upload(remote_path, local_path)  # final attempt
+            if attempt == 3:
+                raise e

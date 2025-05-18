@@ -50,37 +50,46 @@ export function maxZoomFromTiles(tileIdSet: Set<string>) {
 }
 
 export type ViewTuning = {
-  // extra break-point for very small sets
-  smallBreak?: number;
+  smallBreak?: number;   
 
-  // (small)  k & exponent
+  midBreak?: number;      
+
+  veryLargeBreak?: number;
+
   kSmall?: number;
   expSmall?: number;
 
-  // (mid)    k & exponent
   kMid?: number;
   expMid?: number;
 
-  // (large)  k & exponent
   kHigh?: number;
   expHigh?: number;
 
-  // min-pixel tuning
+  kVeryHigh?: number;
+  expVeryHigh?: number;
+
   minFloor?: number;
   expSmallPx?: number;
   expBigPx?: number;
 };
 
+
 export function getViewSettings(
   metadata: Metadata,
   {
     smallBreak = 1e4,
+    midBreak = 5e4,
+    veryLargeBreak = 1.5e6,
+
     kSmall = 10,
     expSmall = 0.5,
     kMid = 12,
     expMid = 0.45,
     kHigh = 8,
     expHigh = 0.55,
+
+    kVeryHigh = 7,
+    expVeryHigh = 0.57,
 
     minFloor = 0.6,
     expSmallPx = 0.17,
@@ -92,9 +101,11 @@ export function getViewSettings(
   const radiusScale =
     count <= smallBreak
       ? Math.min(0.9, kSmall / Math.pow(count, expSmall))
-      : count <= 5e4
+      : count <= midBreak
         ? Math.min(0.9, kMid / Math.pow(count, expMid))
-        : Math.min(0.9, kHigh / Math.pow(count, expHigh));
+        : count <= veryLargeBreak
+          ? Math.min(0.9, kHigh / Math.pow(count, expHigh))
+          : Math.min(0.85, kVeryHigh / Math.pow(count, expVeryHigh));
 
   const expPx = count <= smallBreak ? expSmallPx : expBigPx;
   const radiusMinPixels = Math.min(

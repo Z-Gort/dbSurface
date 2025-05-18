@@ -241,7 +241,7 @@ export default function Map() {
           pickable: false,
           getLineWidth: 0.1,
           opacity: 0.4,
-          visible: props.tile.index.z === 3,
+          visible: props.tile.index.z === 2,
           getPolygon: (bbox) => {
             const [min, max] = bbox;
             const [xMin, yMin] = min;
