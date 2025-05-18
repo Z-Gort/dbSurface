@@ -30,4 +30,8 @@ We have tested with about 30 concurrent connections you can achieve ~25 minute c
 
 Also ensure before creating a projection your restricted connection is not being used for any critical tasks, and note modifying your schema while a projection is being created may cause creation failure.
 
+## License
+
+dbSurface is licensed under the [GNU Affero General Public License v3.0](LICENSE).
+
 
