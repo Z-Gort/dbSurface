@@ -28,7 +28,12 @@ export function reduceColumn({
   endpointUrl.searchParams.append("total_rows", numberPoints.toString());
 
   try {
-    void fetch(endpointUrl.toString());
+    void fetch(endpointUrl.toString(), {
+      headers: {
+        "Modal-Key": process.env.MODAL_KEY!,
+        "Modal-Secret": process.env.MODAL_SECRET!,
+      },
+    });
   } catch (err) {
     console.error("Error triggering Modal function:", err);
   }

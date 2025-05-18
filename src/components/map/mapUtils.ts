@@ -89,7 +89,7 @@ export function getViewSettings(
     expHigh = 0.55,
 
     kVeryHigh = 7,
-    expVeryHigh = 0.57,
+    expVeryHigh = 0.6,
 
     minFloor = 0.6,
     expSmallPx = 0.17,

@@ -74,7 +74,7 @@ def orchestrator(
                 break
 
             prev = wave_size
-            wave_size = max(1, wave_size // 2)
+            wave_size = max(1, int(wave_size // 1.5))
             shard_ids = failed
             print(
                 f"↩︎  {ok} shards ok, {len(failed)} hit pool limit; "
@@ -130,7 +130,7 @@ def fetch_table(
     .add_local_python_source("utils"),
     secrets=[modal.Secret.from_name("supabase-credentials")],
     gpu="T4",
-    timeout=60 * 15,
+    timeout=60 * 90,
     volumes={MOUNT: vol},
 )
 def embed_to_2d(
@@ -182,6 +182,7 @@ def embed_to_2d(
     ),
     secrets=[modal.Secret.from_name("supabase-credentials")],
     volumes={MOUNT: vol},
+    timeout=60 * 60
 )
 def upload_tiles(
     run_dir: str, projection_id: str, vector_col: str, primary_key_col: str
@@ -257,7 +258,7 @@ def upload_tiles(
 
 
 @app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))
-@modal.fastapi_endpoint()
+@modal.fastapi_endpoint(requires_proxy_auth=True)
 def create_projection(
     schema: str,
     table: str,

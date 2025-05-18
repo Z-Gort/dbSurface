@@ -48,3 +48,6 @@ yarn-error.log*
 .idea
 # clerk configuration (can include secrets)
 /.clerk/
+
+__pycache__/
+*.py[cod]

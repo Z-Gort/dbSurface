@@ -221,6 +221,7 @@ def embed_to_2d_helper(
     import numpy as np, cupy as cp, math, os, tempfile, gc, glob
     from cuml.manifold import UMAP
     import glob
+    import multiprocessing as mp
 
     MAX_WAIT = 60
     step = 2
@@ -277,7 +278,29 @@ def embed_to_2d_helper(
         build_kwds={"nnd_do_batch": True, "nnd_n_clusters": n_clusters},
         output_type="numpy",
     )
-    X_low = umap.fit_transform(mmap, data_on_host=True).astype(np.float32)
+    # X_low = umap.fit_transform(mmap, data_on_host=True).astype(np.float32)
+    ctx = mp.get_context("spawn")
+    tmp_out = tempfile.NamedTemporaryFile(suffix=".npy", delete=False)
+    tmp_out.close()
+
+    p = ctx.Process(
+        target=_run_umap_worker,
+        args=(
+            mmap_path,
+            (num_rows, dim),
+            n_neighbors,
+            n_clusters,
+            tmp_out.name,
+        ),  # we execute UMAP via a child process to avoid python thread heartbeat timeouts
+    )
+    p.start()
+    p.join()
+
+    if p.exitcode != 0:
+        raise RuntimeError(f"UMAP subprocess exited with {p.exitcode}")
+
+    X_low = np.load(tmp_out.name, mmap_mode="r")  # memory-maps the 2-D embedding
+    os.unlink(tmp_out.name)
 
     print("UMAP done")
     if num_rows > 100_000:
@@ -361,3 +384,33 @@ def failed(supabase, projection_id):
     supabase.table("projections").update({"status": "failed"}).eq(
         "projection_id", projection_id
     ).execute()
+
+
+def _run_umap_worker(
+    mmap_path: str,
+    shape: tuple[int, int],
+    n_neighbors: int,
+    n_clusters: int,
+    result_path: str,
+) -> None:
+    """
+    Child process entry point.
+    Reads the memory-map, runs cuML UMAP, writes a .npy file with (N,2) floats.
+    """
+    # Everything heavy is imported **inside** the child so that the fork/spawn
+    # does not pull GPU state into the parent.
+    import numpy as np
+    from cuml.manifold import UMAP
+
+    mmap = np.memmap(mmap_path, dtype=np.float32, mode="r", shape=shape)
+
+    umap = UMAP(
+        n_neighbors=n_neighbors,
+        n_components=2,
+        build_algo="nn_descent",
+        build_kwds={"nnd_do_batch": True, "nnd_n_clusters": n_clusters},
+        output_type="numpy",
+    )
+
+    X_low = umap.fit_transform(mmap, data_on_host=True).astype(np.float32)
+    np.save(result_path, X_low)
