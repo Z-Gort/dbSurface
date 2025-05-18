@@ -206,6 +206,7 @@ def fetch_table_helper(
 def embed_to_2d_helper(
     vector_col: str,
     run_dir: str,
+    num_shards: int,
     vol,
     target_gpu_mem: float = 8e9,  # T4 can handle 16GB, so leaving headroom
     n_neighbors: int = 15,
@@ -219,6 +220,26 @@ def embed_to_2d_helper(
     import pyarrow.dataset as ds, pyarrow as pa, pyarrow.ipc as ipc
     import numpy as np, cupy as cp, math, os, tempfile, gc, glob
     from cuml.manifold import UMAP
+    import glob
+
+    MAX_WAIT = 60
+    step = 2
+    waited = 0
+
+    while (
+        True
+    ):  # we wait to make sure all shards' updates have been committed--can't commit in each shard due to volume concurrent writer limit
+        vol.reload()
+        arrow_files = glob.glob(os.path.join(run_dir, "*.arrow"))
+        if len(arrow_files) == num_shards:
+            break
+        if waited >= MAX_WAIT:
+            raise RuntimeError(
+                f"Only {len(arrow_files)}/{num_shards} shards committed "
+                "after a full minute – giving up."
+            )
+        time.sleep(step)
+        waited += step
 
     ds_obj = ds.dataset(run_dir, format="arrow")
     num_rows = ds_obj.count_rows()

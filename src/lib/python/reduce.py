@@ -80,11 +80,10 @@ def orchestrator(
                 f"↩︎  {ok} shards ok, {len(failed)} hit pool limit; "
                 f"retrying with wave_size={wave_size} (was {prev})"
             )
-        embed_to_2d.spawn(primary_key_col, vector_col, run_dir, projection_id)
+        embed_to_2d.spawn(primary_key_col, vector_col, run_dir, projection_id, NUM_SHARDS)
     except Exception:
-        #clean
         failed(supabase_client, projection_id)
-
+        cleanup_volume.spawn(projection_id) 
 
 @app.function(
     image=modal.Image.debian_slim()
@@ -139,19 +138,17 @@ def embed_to_2d(
     vector_col: str,
     run_dir: str,
     projection_id: str,
+    num_shards: int,
     target_gpu_mem: float = 8e9,  # determines how the maximum GPU memory in each batch of UMAP
     n_neighbors: int = 15,
-    batch_rows: int = 100_000,
-) -> str:
+    batch_rows: int = 100_000
+):
     """
     Write primary_key, x, y to /cache/xy.arrow
     """
     from utils import embed_to_2d_helper, failed
     from supabase import create_client
     import os
-
-    vol.reload()
-
     supabase_client = create_client(
         os.environ["SUPABASE_URL"],
         os.environ["SUPABASE_KEY"],
@@ -160,6 +157,7 @@ def embed_to_2d(
         embed_to_2d_helper(
             vector_col,
             run_dir,
+            num_shards,
             vol,
             target_gpu_mem,
             n_neighbors,
@@ -168,9 +166,9 @@ def embed_to_2d(
 
         upload_tiles.spawn(run_dir, projection_id, vector_col, primary_key_col)
     except Exception as e:
-        #clean TODO
         print("embed 2d failed", e)
         failed(supabase_client, projection_id)
+        cleanup_volume.spawn(projection_id) 
 
 
 @app.function(
@@ -253,9 +251,9 @@ def upload_tiles(
         cleanup_volume.spawn(projection_id) 
 
     except Exception as e:
-        #clean
         print("failed", e)
         failed(supabase_client, projection_id)
+        cleanup_volume.spawn(projection_id) 
 
 
 @app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))

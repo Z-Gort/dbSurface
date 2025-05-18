@@ -25,6 +25,7 @@ import {
   queryGetFillColor,
   useQueryData,
 } from "./mapUtils";
+import { PolygonLayer } from "@deck.gl/layers";
 
 export default function Map() {
   const [metadata, setMetadata] = useState<Metadata | null>(null);
@@ -231,7 +232,31 @@ export default function Map() {
           pickable: true,
           ...otherProps,
         });
-        return [scatterLayer];
+
+        const polygonLayer = new PolygonLayer({
+          id: `polygon-layer-${props.tile.index.z}-${props.tile.index.x}-${props.tile.index.y}`,
+          positionFormat: "XY",
+          getFillColor: [255, 0, 0, 100],
+          data: [props.tile.boundingBox],
+          pickable: false,
+          getLineWidth: 0.1,
+          opacity: 0.4,
+          visible: props.tile.index.z === 3,
+          getPolygon: (bbox) => {
+            const [min, max] = bbox;
+            const [xMin, yMin] = min;
+            const [xMax, yMax] = max;
+            return [
+              [xMin, yMin],
+              [xMax, yMin],
+              [xMax, yMax],
+              [xMin, yMax],
+              [xMin, yMin],
+            ];
+          },
+        });
+
+        return [scatterLayer, polygonLayer];
       },
       onTileError: (tile, error) => {
         console.error("Tile load error:", tile, tile.index, error);
