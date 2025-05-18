@@ -43,6 +43,7 @@ class TileUploader:
         import zstandard as zstd
         from datetime import timezone
         import decimal
+        import gc
 
         print("uploading tile")
         os.makedirs(self.output_dir, exist_ok=True)
@@ -122,6 +123,9 @@ class TileUploader:
         tile_metadata["compressed_size"] = compressed_file_size
         self.metadata[tile_id] = tile_metadata
         print("done uploading tile")
+
+        del subset, data, combined, out_table
+        gc.collect()
 
     def recurse(self, qtree, tile_id="0/0_0"):
         """

@@ -12,7 +12,7 @@ def get_num_shards(total_rows: int, creds) -> int:
     else:
         rows_per_shard = 60_000
 
-    hard_cap = 200
+    hard_cap = 250
 
     free_slots = _free_connection_slots(creds, reserve=5)
 
@@ -97,7 +97,6 @@ def fetch_table_helper(
     total_shards: int,
     creds,
     run_dir: str,
-    vol,
 ):
     import psycopg, pyarrow as pa, pyarrow.ipc as ipc, pathlib
     from pgvector.psycopg import register_vector
@@ -202,7 +201,6 @@ def fetch_table_helper(
         writer.close()
     sink.close()
     tmp.rename(dst)
-    vol.commit()
 
 
 def embed_to_2d_helper(
