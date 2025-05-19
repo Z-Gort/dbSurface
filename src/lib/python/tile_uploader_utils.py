@@ -21,9 +21,9 @@ def finalize_projection(metadata, digest_by_col, projection_id, supabase, num_ro
     path = "/tmp/tiles/metadata.json"
     with open(path, "w") as f:
         json.dump(final_metadata, f, indent=2)
-    supabase.storage.from_("quadtree-tiles").upload(
-        f"{projection_id}/metadata.json", path
-    )
+
+    upload_to_r2(path, f"{projection_id}/metadata.json")
+    
     supabase.table("projections").update(
         {"status": "live", "number_points": num_rows}
     ).eq("projection_id", projection_id).execute()
@@ -102,10 +102,25 @@ def get_digest_by_col(arrow_schema):
     return digest_by_column
 
 
-def upload_to_supabase(local_path, remote_path, supabase, bucket="quadtree-tiles"):
+def upload_to_r2(local_path, remote_path, bucket="quadtree-tiles"):
+    import boto3
+    import os
+
+    account_id = os.environ["CLOUDFLARE_ACCOUNT_ID"]
+    api_key = os.environ["CLOUDFLARE_API_KEY"]
+    api_secret = os.environ["CLOUDFLARE_API_SECRET"]
+
+    r2 = boto3.client(
+        "s3",
+        endpoint_url=f"https://{account_id}.r2.cloudflarestorage.com",
+        aws_access_key_id=api_key,
+        aws_secret_access_key=api_secret,
+        region_name="auto",
+    )
+
     for attempt in range(4):
         try:
-            supabase.storage.from_(bucket).upload(remote_path, local_path)
+            r2.upload_file(local_path, bucket, remote_path)
             break
         except Exception as e:
             print("failed to upload to supabase", e)

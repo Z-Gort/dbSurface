@@ -80,10 +80,13 @@ def orchestrator(
                 f"↩︎  {ok} shards ok, {len(failed)} hit pool limit; "
                 f"retrying with wave_size={wave_size} (was {prev})"
             )
-        embed_to_2d.spawn(primary_key_col, vector_col, run_dir, projection_id, NUM_SHARDS)
+        embed_to_2d.spawn(
+            primary_key_col, vector_col, run_dir, projection_id, NUM_SHARDS
+        )
     except Exception:
         failed(supabase_client, projection_id)
-        cleanup_volume.spawn(projection_id) 
+        cleanup_volume.spawn(projection_id)
+
 
 @app.function(
     image=modal.Image.debian_slim()
@@ -141,7 +144,7 @@ def embed_to_2d(
     num_shards: int,
     target_gpu_mem: float = 8e9,  # determines how the maximum GPU memory in each batch of UMAP
     n_neighbors: int = 15,
-    batch_rows: int = 100_000
+    batch_rows: int = 100_000,
 ):
     """
     Write primary_key, x, y to /cache/xy.arrow
@@ -149,6 +152,7 @@ def embed_to_2d(
     from utils import embed_to_2d_helper, failed
     from supabase import create_client
     import os
+
     supabase_client = create_client(
         os.environ["SUPABASE_URL"],
         os.environ["SUPABASE_KEY"],
@@ -168,7 +172,7 @@ def embed_to_2d(
     except Exception as e:
         print("embed 2d failed", e)
         failed(supabase_client, projection_id)
-        cleanup_volume.spawn(projection_id) 
+        cleanup_volume.spawn(projection_id)
 
 
 @app.function(
@@ -177,12 +181,16 @@ def embed_to_2d(
     .pip_install("supabase")
     .pip_install("zstandard")
     .pip_install("tdigest")
+    .pip_install("boto3")
     .add_local_python_source(
         "tile_uploader_utils", "tile_uploader", "quadtree", "utils"
     ),
-    secrets=[modal.Secret.from_name("supabase-credentials")],
+    secrets=[
+        modal.Secret.from_name("supabase-credentials"),
+        modal.Secret.from_name("cloudflare-credentials"),
+    ],
     volumes={MOUNT: vol},
-    timeout=60 * 60
+    timeout=60 * 60,
 )
 def upload_tiles(
     run_dir: str, projection_id: str, vector_col: str, primary_key_col: str
@@ -249,12 +257,12 @@ def upload_tiles(
             num_rows,
         )
 
-        cleanup_volume.spawn(projection_id) 
+        cleanup_volume.spawn(projection_id)
 
     except Exception as e:
         print("failed", e)
         failed(supabase_client, projection_id)
-        cleanup_volume.spawn(projection_id) 
+        cleanup_volume.spawn(projection_id)
 
 
 @app.function(image=modal.Image.debian_slim().pip_install("fastapi[standard]"))
@@ -310,6 +318,7 @@ def run_wave(shard_ids, wave_size, const_kw):
                 ok += 1
 
     return failed, ok
+
 
 @app.function(
     image=modal.Image.debian_slim(),

@@ -1,4 +1,5 @@
-from tile_uploader_utils import upload_to_supabase
+from tile_uploader_utils import upload_to_r2
+
 
 class TileUploader:
 
@@ -109,7 +110,7 @@ class TileUploader:
         compressed_file_size = os.path.getsize(compressed_filename)
 
         remote_path = f"{self.projection_id}/tiles/{tile_id}.arrow.zst"
-        upload_to_supabase(compressed_filename, remote_path, self.supabase_client)
+        upload_to_r2(compressed_filename, remote_path)
 
         tile_metadata = {
             "tile_id": tile_id,
