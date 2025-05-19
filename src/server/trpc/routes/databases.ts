@@ -1,10 +1,12 @@
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { asc } from "drizzle-orm";
 import { and, eq, isNotNull } from "drizzle-orm/expressions";
 import { type PoolConfig } from "pg";
 import { z } from "zod";
 import { db } from "~/server/db";
+import { r2 } from "~/server/db/r2Client";
 import { databases, projections, users } from "~/server/db/schema";
-import { supabase } from "~/server/db/supabaseClient";
 import { deleteBucketFolder, getUserIdByClerkId } from "~/server/dbUtils";
 import { testRemoteConnection } from "~/server/trpc/remoteConnectionUtils";
 import { protectedProcedure, router } from "../trpc";
@@ -79,11 +81,11 @@ export const databasesRouter = router({
         localDbPassword: databases.localDbPassword,
         restrictedDbUser: databases.restrictedDbUser,
         restrictedDbPassword: databases.restrictedDbPassword,
-        createdAt: databases.createdAt, // include if you want to return it
+        createdAt: databases.createdAt, 
       })
       .from(databases)
       .where(eq(databases.userId, userId))
-      .orderBy(asc(databases.createdAt)) // ← oldest → newest
+      .orderBy(asc(databases.createdAt))
       .execute();
 
     return results;
@@ -172,7 +174,7 @@ export const databasesRouter = router({
       } catch (error) {
         console.log("getactivedb error", error, error.message);
       }
-      return "pol"
+      return "pol";
     },
   ),
   getDbRow: protectedProcedure
@@ -197,10 +199,21 @@ export const databasesRouter = router({
       }),
     )
     .query(async ({ input }) => {
-      const { data } = await supabase.storage
-        .from(input.bucket)
-        .createSignedUrls(input.remotePaths, 60 * 60 * 90); //90 mins in seconds
+      const signedUrls = await Promise.all(
+        input.remotePaths.map(async (key) => {
+          const cmd = new GetObjectCommand({
+            Bucket: input.bucket,
+            Key: key,
+          });
 
-      return data;
+          const url = await getSignedUrl(r2, cmd, {
+            expiresIn: 60 * 60 * 90,
+          });
+
+          return { path: key, signedUrl: url };
+        }),
+      );
+
+      return signedUrls;
     }),
 });

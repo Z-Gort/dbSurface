@@ -50,9 +50,9 @@ export function maxZoomFromTiles(tileIdSet: Set<string>) {
 }
 
 export type ViewTuning = {
-  smallBreak?: number;   
+  smallBreak?: number;
 
-  midBreak?: number;      
+  midBreak?: number;
 
   veryLargeBreak?: number;
 
@@ -72,7 +72,6 @@ export type ViewTuning = {
   expSmallPx?: number;
   expBigPx?: number;
 };
-
 
 export function getViewSettings(
   metadata: Metadata,
@@ -478,17 +477,21 @@ export async function loadAllSignedUrls(
   const metadataRemotePath = `${projectionId}/metadata.json`;
 
   const signedMetadataUrls =
-    await trpcContext.client.databases.createSignedUrls.query({
+    (await trpcContext.client.databases.createSignedUrls.query({
       remotePaths: [metadataRemotePath],
       bucket: "quadtree-tiles",
-    });
+    })) as { path: string; signedUrl: string }[];
+  console.log("signedMetadata urls", signedMetadataUrls);
   if (!signedMetadataUrls?.[0]) {
     console.error("No signedMetadataUrls found");
     return;
   }
 
   const metadataSignedUrl = signedMetadataUrls[0].signedUrl;
+  console.log("signedMetadataurl", metadataSignedUrl);
+
   const metadataText = await fetch(metadataSignedUrl).then((res) => res.text());
+
   const parsedMetadata = JSON.parse(metadataText) as Metadata;
 
   const tileRemotePaths = Object.keys(parsedMetadata.tiles).map(
@@ -497,10 +500,12 @@ export async function loadAllSignedUrls(
 
   let signedTileUrls;
   try {
-    signedTileUrls = await trpcContext.client.databases.createSignedUrls.query({
-      remotePaths: tileRemotePaths,
-      bucket: "quadtree-tiles",
-    });
+    signedTileUrls = (await trpcContext.client.databases.createSignedUrls.query(
+      {
+        remotePaths: tileRemotePaths,
+        bucket: "quadtree-tiles",
+      },
+    )) as { path: string; signedUrl: string }[];
   } catch (error) {
     console.log("no signed metadata", signedMetadataUrls, error);
   }
