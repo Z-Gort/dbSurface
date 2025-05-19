@@ -9,7 +9,7 @@
   </a>
 </h1>
 
-[dbSurface](https://dbsurface.com) is the SQL editor made for pgvector.
+[dbSurface](https://dbsurface.com) is a SQL editor made for pgvector.
 
 ---
 

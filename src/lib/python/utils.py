@@ -12,7 +12,7 @@ def get_num_shards(total_rows: int, creds) -> int:
     else:
         rows_per_shard = 60_000
 
-    hard_cap = 250
+    hard_cap = 200
 
     free_slots = _free_connection_slots(creds, reserve=5)
 
@@ -208,7 +208,7 @@ def embed_to_2d_helper(
     run_dir: str,
     num_shards: int,
     vol,
-    target_gpu_mem: float = 8e9,  # T4 can handle 16GB, so leaving headroom
+    target_gpu_mem: float = 7e9,  # T4 can handle 16GB, so leaving headroom
     n_neighbors: int = 15,
     batch_rows: int = 100_000,
 ):

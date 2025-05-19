@@ -1,7 +1,8 @@
 import { db } from "~/server/db";
 import { users } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
-import { supabase } from "~/server/db/supabaseClient";
+import { r2 } from "~/server/db/r2Client";
+import { ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 
 export async function getUserIdByClerkId(clerkId: string): Promise<string> {
   const userRes = await db
@@ -14,25 +15,24 @@ export async function getUserIdByClerkId(clerkId: string): Promise<string> {
 }
 
 export async function deleteBucketFolder(bucket: string, folderPath: string) {
-  const { data } = await supabase.storage.from(bucket).list(folderPath);
+  // This function only deletes up to 1000 files at once
+  const prefix = folderPath.endsWith("/") ? folderPath : `${folderPath}/`;
 
-  if (!data) { // not all projections have a bucket (if they failed in creation)
-    return;
-  }
+  const { Contents } = await r2.send(
+    new ListObjectsV2Command({ Bucket: bucket, Prefix: prefix, MaxKeys: 1000 }),
+  );
 
-  const filesToDelete = data
-    .filter((item) => item.metadata)
-    .map((item) => `${folderPath}/${item.name}`);
+  if (!Contents?.length) return; // not all projections have files (if they failed in creation)
 
-  const folders = data
-    .filter((item) => !item.metadata)
-    .map((item) => `${folderPath}/${item.name}`);
-
-  if (filesToDelete.length > 0) {
-    await supabase.storage.from(bucket).remove(filesToDelete);
-  }
-
-  for (const subfolder of folders) {
-    await deleteBucketFolder(bucket, subfolder);
-  }
+  await r2.send(
+    new DeleteObjectsCommand({
+      Bucket: bucket,
+      Delete: {
+        Objects: Contents.filter((obj) => obj.Key).map((obj) => ({
+          Key: obj.Key!,
+        })),
+        Quiet: true,
+      },
+    }),
+  );
 }

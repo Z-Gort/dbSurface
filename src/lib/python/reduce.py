@@ -142,7 +142,7 @@ def embed_to_2d(
     run_dir: str,
     projection_id: str,
     num_shards: int,
-    target_gpu_mem: float = 8e9,  # determines how the maximum GPU memory in each batch of UMAP
+    target_gpu_mem: float = 7e9,  # determines how the maximum GPU memory in each batch of UMAP
     n_neighbors: int = 15,
     batch_rows: int = 100_000,
 ):

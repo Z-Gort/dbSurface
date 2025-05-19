@@ -1,10 +1,9 @@
-import { inngest } from "./client";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "~/server/db";
 import { databases, projections, users } from "~/server/db/schema";
-import { z } from "zod";
-import { eq } from "drizzle-orm";
-import { supabase } from "~/server/db/supabaseClient";
 import { deleteBucketFolder } from "~/server/dbUtils";
+import { inngest } from "./client";
 
 const EmailAddressSchema = z.object({
   id: z.string(),

@@ -81,7 +81,7 @@ export const databasesRouter = router({
         localDbPassword: databases.localDbPassword,
         restrictedDbUser: databases.restrictedDbUser,
         restrictedDbPassword: databases.restrictedDbPassword,
-        createdAt: databases.createdAt, 
+        createdAt: databases.createdAt,
       })
       .from(databases)
       .where(eq(databases.userId, userId))
@@ -198,7 +198,7 @@ export const databasesRouter = router({
         bucket: z.string(),
       }),
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const signedUrls = await Promise.all(
         input.remotePaths.map(async (key) => {
           const cmd = new GetObjectCommand({

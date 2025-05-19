@@ -477,7 +477,7 @@ export async function loadAllSignedUrls(
   const metadataRemotePath = `${projectionId}/metadata.json`;
 
   const signedMetadataUrls =
-    (await trpcContext.client.databases.createSignedUrls.query({
+    (await trpcContext.client.databases.createSignedUrls.mutate({
       remotePaths: [metadataRemotePath],
       bucket: "quadtree-tiles",
     })) as { path: string; signedUrl: string }[];
@@ -498,20 +498,13 @@ export async function loadAllSignedUrls(
     (tileId) => `${projectionId}/tiles/${tileId}.arrow.zst`,
   );
 
-  let signedTileUrls;
-  try {
-    signedTileUrls = (await trpcContext.client.databases.createSignedUrls.query(
-      {
-        remotePaths: tileRemotePaths,
-        bucket: "quadtree-tiles",
-      },
-    )) as { path: string; signedUrl: string }[];
-  } catch (error) {
-    console.log("no signed metadata", signedMetadataUrls, error);
-  }
+  const signedTileUrls = (await trpcContext.client.databases.createSignedUrls.mutate({
+    remotePaths: tileRemotePaths,
+    bucket: "quadtree-tiles",
+  })) as { path: string; signedUrl: string }[];
 
   if (!signedTileUrls?.[0]) {
-    console.error("No signedMetadataUrls found");
+    console.error("No tile urls found");
     return;
   }
 
