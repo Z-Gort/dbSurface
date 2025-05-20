@@ -2,8 +2,8 @@ class QuadTree:
     """Splits (x, y, idx) items into quadtree tiles."""
 
     MAX_TILE_POINTS = 64000
-    BETA = 0.5
-    ALPHA = 1
+    BETA = 0.1
+    ALPHA = 0.3
 
     def __init__(
         self, center_x, center_y, size, items, depth=0
@@ -57,12 +57,22 @@ class QuadTree:
         """Takes items and returns ideal synthetic points as np.ndarray of shape (M,2)"""
         from scipy.stats import gaussian_kde
         import numpy as np
+        from sklearn.neighbors import NearestNeighbors
 
         coords = np.stack([[x, y] for x, y, _ in items])  # shape (n,2)
+        print("about to get density")
+        k = 16
 
-        # Estimate density
-        kde = gaussian_kde(coords.T, bw_method="scott")
-        dens = kde(coords.T)  # shape (n,)
+        # 1) Build a single NN index in O(n log n)
+        nbrs = NearestNeighbors(n_neighbors=k, algorithm="auto").fit(coords)
+
+        # 2) Query the k-th neighbor distance for every point in O(n log n)
+        dists, _ = nbrs.kneighbors(coords)    # shape (n, k)
+        r_k = dists[:, -1]                    # distance to the 8th neighbor
+
+        # 3) Turn that into a density proxy
+        dens = 1.0 / (np.pi * r_k**2 + 1e-12)  # ≈ points per unit area
+
 
         print("got density")
 
@@ -82,6 +92,7 @@ class QuadTree:
         from sklearn.neighbors import KDTree
         import numpy as np
         import random
+
         """
         synthetic : np.ndarray of shape (M,2)  — “ideal” floats
         items     : list of (x, y, idx)        — the full real dataset at this node

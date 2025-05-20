@@ -41,7 +41,13 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>(Logo)</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-0 h-12">
+            <img
+              src="/logo-transparent_no_name.png"
+              className="h-11 mb-2 sm:h-12"
+              alt="dbSurface"
+            />
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
