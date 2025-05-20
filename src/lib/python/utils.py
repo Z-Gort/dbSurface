@@ -304,7 +304,7 @@ def embed_to_2d_helper(
 
     print("UMAP done")
     if num_rows > 100_000:
-        pct_low, pct_high = 0.1, 99.9
+        pct_low, pct_high = 0.07, 99.3
     elif num_rows > 10_000:
         pct_low, pct_high = 0.3, 99.7
     elif num_rows > 1_000:
@@ -316,12 +316,12 @@ def embed_to_2d_helper(
         X_low, [pct_low, pct_high], axis=0
     )  # clip data into dimensions where most of the data is
 
+    ranges = pmax - pmin
+
     X_clip = np.clip(X_low, pmin, pmax)
-    size = float((pmax - pmin).max())
-    center = (pmax + pmin) / 2
-    X_tr = X_clip - (center - size / 2)  # put square’s lower-left corner at 0,0
-    X_norm = (X_tr / size) * 100.0  # scale to 0‒100
-    X_norm = np.clip(X_norm, 0, 100)
+    
+    X_norm = (X_clip - pmin) / ranges * 100.0
+    X_norm = np.clip(X_norm, 0.0, 100.0)
 
     # jitter the data which was moved to the edges
     eps_jitter = 0.9

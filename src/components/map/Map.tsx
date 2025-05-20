@@ -228,7 +228,6 @@ export default function Map() {
           radiusUnits: "meters",
           radiusMinPixels: getViewSettings(metadata).radiusMinPixels,
           radiusScale: getViewSettings(metadata).radiusScale,
-          visible: true,
           pickable: true,
           ...otherProps,
         });
@@ -241,7 +240,7 @@ export default function Map() {
           pickable: false,
           getLineWidth: 0.1,
           opacity: 0.4,
-          visible: props.tile.index.z === 2,
+          visible: props.tile.index.z === 9,
           getPolygon: (bbox) => {
             const [min, max] = bbox;
             const [xMin, yMin] = min;

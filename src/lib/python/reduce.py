@@ -1,23 +1,8 @@
 import modal
 
-rapids_image_old = (
-    modal.Image.from_registry("rapidsai/base:25.04a-cuda12.8-py3.11")
-    .apt_install("build-essential")
-    .pip_install("psycopg2-binary")
-    .pip_install("scikit-learn")
-    .pip_install("numpy")
-    .pip_install("pyarrow")
-    .pip_install("supabase")
-    .pip_install("zstandard")
-    .pip_install("tdigest")
-    .pip_install("pgvector")
-    .add_local_python_source("utils")
-)
-
 app = modal.App("create projection")
 
 MOUNT = "/cache"
-
 vol = modal.Volume.from_name("reduction-files", create_if_missing=True)
 
 
@@ -182,6 +167,9 @@ def embed_to_2d(
     .pip_install("zstandard")
     .pip_install("tdigest")
     .pip_install("boto3")
+    .pip_install("numpy")
+    .pip_install("scipy")
+    .pip_install("scikit-learn")
     .add_local_python_source(
         "tile_uploader_utils", "tile_uploader", "quadtree", "utils"
     ),
@@ -216,17 +204,21 @@ def upload_tiles(
         print("starting upload tiles")
         vol.reload()
 
-        qt = QuadTree(50, 50, 50)  # recall we normalized to 100x100
-
         xy_path = os.path.join(run_dir, "xy.arrow")
         reader = ipc.open_file(xy_path)
         table = reader.read_all()
         cols = table.to_pydict()
 
-        for x, y, idx in zip(cols["x"], cols["y"], cols["row-index"]):
-            qt.insert((float(x), float(y), int(idx)))
+        items = [
+            (float(x), float(y), int(idx))
+            for x, y, idx in zip(cols["x"], cols["y"], cols["row-index"])
+        ]
+        print("starting quadtree build")
+
+        qt = QuadTree(50, 50, 50, items)  # recall we normalized to 100x100
 
         print("quadtree built")
+        qt.print_tree()
 
         arrow_schema = make_arrow_schema(run_dir, vector_col, primary_key_col)
         timestamp_cols = get_timestamp_cols(arrow_schema)
