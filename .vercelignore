@@ -3,3 +3,4 @@
 !src/env.js
 !src/server/inngest
 !package.json
+!/pnpm-lock.yaml
