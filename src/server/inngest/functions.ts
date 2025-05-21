@@ -50,7 +50,7 @@ export const addUser = inngest.createFunction(
   },
 );
 
-//the only update a user can do (relevant to user info stored in database) is change their primary email adress
+//the only update a user can do (relevant to user info stored in database) is change their primary email address
 export const updateUser = inngest.createFunction(
   { id: "update-user-from-clerk" },
   { event: "clerk/user.updated" },
