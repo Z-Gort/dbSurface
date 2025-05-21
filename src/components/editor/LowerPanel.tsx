@@ -15,7 +15,12 @@ import { ProjectionsDropdown } from "./ProjectionsDropdown";
 import { ResultsSection } from "./ResultsSection";
 import { trpc } from "~/lib/client";
 import { getQueryClient } from "@trpc/react-query/shared";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 export function LowerPanel({
   monacoRef,
@@ -145,7 +150,18 @@ export function LowerPanel({
     let precision;
     updateResult({ isLoading: true });
     try {
-      precision = await getPrecision(query.current, result, mutateAsync);
+      const { rows: approximateRows } = await executeQuery.mutateAsync({
+        query: query.current,
+        disableLimit: projecting,
+      });
+
+      const approximateResult = JSON.stringify(approximateRows, null, 2);
+
+      precision = await getPrecision(
+        query.current,
+        approximateResult,
+        mutateAsync,
+      );
     } catch (error) {
       console.log("precision error", error);
       precision = "-";
@@ -154,6 +170,7 @@ export function LowerPanel({
     }
     updateResult({ precision: precision });
   };
+
   return (
     <div className="mt-1 flex h-full flex-col">
       {/* Button Section */}
@@ -188,22 +205,27 @@ export function LowerPanel({
             ) : null}
           </div>
           <div className="flex items-center space-x-3">
-            {ranSimilarity && (
-              <TooltipProvider>
+            {/* {ranSimilarity && ( */}
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" onClick={handleCheckPrecision}>
+                  <Button
+                    variant="outline"
+                    onClick={handleCheckPrecision}
+                    disabled={!ranSimilarity}
+                  >
                     Check Precision
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="rounded bg-black p-2 text-white shadow">
                   <p className="max-w-xs text-xs">
-                  To check precision, your query must return the same vector column you’re comparing in the similarity filter.
+                    Note: To check precision, your query must return the same
+                    vector column you’re comparing in the similarity filter.
                   </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            )}
+            {/* )} */}
             <ProjectionsDropdown />
             <Button onClick={handleRunQuery} className="px-4 py-2">
               Run

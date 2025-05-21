@@ -2,8 +2,13 @@ class QuadTree:
     """Splits (x, y, idx) items into quadtree tiles."""
 
     MAX_TILE_POINTS = 64000
-    BETA = 0.1
-    ALPHA = 0.3
+
+    # within the adaptive picks, weight = (1 – BETA) + BETA·(1/ρ^ALPHA)
+    BETA = 0.05
+    ALPHA = 0.1
+
+    # fraction of picks to allocate to pure spatial uniformity
+    SPATIAL_FRACTION = 0.5
 
     def __init__(
         self, center_x, center_y, size, items, depth=0
@@ -54,38 +59,45 @@ class QuadTree:
         return quad_list
 
     def get_synthetic_sample(self, items):
-        """Takes items and returns ideal synthetic points as np.ndarray of shape (M,2)"""
-        from scipy.stats import gaussian_kde
         import numpy as np
         from sklearn.neighbors import NearestNeighbors
 
-        coords = np.stack([[x, y] for x, y, _ in items])  # shape (n,2)
-        print("about to get density")
-        k = 16
+        # 0) build coords array
+        coords = np.stack([[x, y] for x, y, _ in items])  # (n,2)
+        n = len(coords)
+        M = self.MAX_TILE_POINTS
 
-        # 1) Build a single NN index in O(n log n)
-        nbrs = NearestNeighbors(n_neighbors=k, algorithm="auto").fit(coords)
+        # how many we uniform vs adaptive density sample
+        M_uni = int(self.SPATIAL_FRACTION * M)  # uniform-spatial
+        M_adapt = M - M_uni  # density-adaptive
 
-        # 2) Query the k-th neighbor distance for every point in O(n log n)
-        dists, _ = nbrs.kneighbors(coords)    # shape (n, k)
-        r_k = dists[:, -1]                    # distance to the 8th neighbor
+        # density proxy via k-NN
+        k = 8
+        nbrs = NearestNeighbors(n_neighbors=k).fit(coords)
+        dists, _ = nbrs.kneighbors(coords)
+        r_k = dists[:, -1]
+        dens = 1.0 / (np.pi * r_k**2 + 1e-12)
 
-        # 3) Turn that into a density proxy
-        dens = 1.0 / (np.pi * r_k**2 + 1e-12)  # ≈ points per unit area
-
-
-        print("got density")
-
-        # Compute the same weight formula
+        #  build adaptive weights
         w = (1 - self.BETA) + self.BETA * (1.0 / (dens**self.ALPHA))
         w /= w.sum()
 
-        # Sample
-        idx = np.random.choice(
-            len(coords), size=self.MAX_TILE_POINTS, replace=False, p=w
+        # adaptive picks (actual data points)
+        idx_adapt = np.random.choice(n, size=M_adapt, replace=False, p=w)
+        pts_adapt = coords[idx_adapt]
+
+        # uniform-spatial picks (synthetic coords)
+        x0, y0 = coords[:, 0].min(), coords[:, 1].min()
+        x1, y1 = coords[:, 0].max(), coords[:, 1].max()
+        pts_uni = np.column_stack(
+            [
+                np.random.uniform(x0, x1, size=M_uni),
+                np.random.uniform(y0, y1, size=M_uni),
+            ]
         )
-        print("sampled from density")
-        synthetic = coords[idx]
+
+        synthetic = np.vstack([pts_adapt, pts_uni])
+
         return synthetic
 
     def snap_to_real(self, synthetic, items):
