@@ -177,7 +177,7 @@ export default function Map() {
           Number(metadata.tiles["0/0_0"].node_count),
         );
         return hashes?.has(hash)
-          ? queriedMultiplier // e.g. 50% bigger
+          ? queriedMultiplier
           : 0.5;
       },
       transitions: {

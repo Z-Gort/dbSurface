@@ -95,13 +95,12 @@ export function LowerPanel({
           query.current.includes(keyword),
         );
 
-        updateResult({ hashes: hashSet, isLoading: false, ranSimilarity: ranSimilarity });
+        updateResult({ hashes: hashSet, isLoading: false });
         return;
       } catch (error) {
         updateResult({
           hashes: undefined,
           isLoading: false,
-          ranSimilarity: false,
         });
         return;
       }
@@ -212,27 +211,28 @@ export function LowerPanel({
             ) : null}
           </div>
           <div className="flex items-center space-x-3">
-            {/* {ranSimilarity && ( */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    onClick={handleCheckPrecision}
-                    disabled={!ranSimilarity}
-                  >
-                    Check Precision
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="rounded bg-black p-2 text-white shadow">
-                  <p className="max-w-xs text-xs">
-                    Note: To check precision, your query must return the same
-                    vector column you’re comparing in the similarity filter.
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            {/* )} */}
+            {!projecting && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      onClick={handleCheckPrecision}
+                      disabled={!ranSimilarity}
+                    >
+                      Check Precision
+                    </Button>
+                  </TooltipTrigger>
+
+                  <TooltipContent className="rounded bg-black p-2 text-white shadow">
+                    <p className="max-w-xs text-xs">
+                      Note: To check precision, your query must return the same
+                      vector column you’re comparing in the similarity filter.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
             <ProjectionsDropdown />
             <Button onClick={handleRunQuery} className="px-4 py-2">
               Run
