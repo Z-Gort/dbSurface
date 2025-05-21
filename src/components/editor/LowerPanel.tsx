@@ -89,12 +89,19 @@ export function LowerPanel({
         });
         console.log("recieved hashes", hashes);
         const hashSet = new Set<number>(hashes);
-        updateResult({ hashes: hashSet, isLoading: false });
+
+        const vectorKeywords = ["<->", "<#>", "<=>", "<+>", "<~>", "<%>"];
+        const ranSimilarity = vectorKeywords.some((keyword) =>
+          query.current.includes(keyword),
+        );
+
+        updateResult({ hashes: hashSet, isLoading: false, ranSimilarity: ranSimilarity });
         return;
       } catch (error) {
         updateResult({
           hashes: undefined,
           isLoading: false,
+          ranSimilarity: false,
         });
         return;
       }
@@ -152,7 +159,7 @@ export function LowerPanel({
     try {
       const { rows: approximateRows } = await executeQuery.mutateAsync({
         query: query.current,
-        disableLimit: projecting,
+        disableLimit: true,
       });
 
       const approximateResult = JSON.stringify(approximateRows, null, 2);
