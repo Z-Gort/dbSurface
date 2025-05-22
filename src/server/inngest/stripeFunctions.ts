@@ -6,8 +6,8 @@ const StripeSubscriptionCreated = z.object({
   customer: z.string(),
 });
 
-export const addUser = inngest.createFunction(
-  { id: "add-user-from-clerk" },
+export const subscriptionCreated = inngest.createFunction(
+  { id: "stripe-customer-subscription-created" },
   { event: "stripe/customer.subscription.created" },
   async ({ event }) => {
     console.log("raw event", event)
@@ -19,6 +19,7 @@ export const addUser = inngest.createFunction(
     }
 
     console.log("payload recieved", parsed)
-    //TODO
+
+    
   },
 );
