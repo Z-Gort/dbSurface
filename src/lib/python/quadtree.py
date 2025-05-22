@@ -1,14 +1,14 @@
 class QuadTree:
     """Splits (x, y, idx) items into quadtree tiles."""
 
-    MAX_TILE_POINTS = 64000
+    MAX_TILE_POINTS = 4000
 
     # within the adaptive picks, weight = (1 – BETA) + BETA·(1/ρ^ALPHA)
     BETA = 0.05
     ALPHA = 0.1
 
     # fraction of picks to allocate to pure spatial uniformity
-    SPATIAL_FRACTION = 0.5
+    SPATIAL_FRACTION = 1
 
     def __init__(
         self, center_x, center_y, size, items, depth=0
