@@ -8,7 +8,7 @@ class QuadTree:
     ALPHA = 0.1
 
     # fraction of picks to allocate to pure spatial uniformity
-    SPATIAL_FRACTION = 1
+    SPATIAL_FRACTION = 0.8
 
     def __init__(
         self, center_x, center_y, size, items, depth=0

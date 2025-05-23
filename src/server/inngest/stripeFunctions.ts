@@ -2,15 +2,20 @@ import { inngest } from "./client";
 import { z } from "zod";
 
 const StripeSubscriptionCreated = z.object({
-  //only handling customers for now
-  customer: z.string(),
+  data: z.object({
+    data: z.object({
+      object: z.object({
+        customer: z.string(),
+      }),
+    }),
+  }),
 });
 
 export const subscriptionCreated = inngest.createFunction(
   { id: "stripe-customer-subscription-created" },
   { event: "stripe/customer.subscription.created" },
   async ({ event }) => {
-    console.log("raw event", event)
+    console.log("raw event", event);
     const parsed = StripeSubscriptionCreated.safeParse(event);
 
     if (!parsed.success) {
@@ -18,8 +23,8 @@ export const subscriptionCreated = inngest.createFunction(
       throw new Error("Invalid event payload");
     }
 
-    console.log("payload recieved", parsed)
-
-    
+    console.log("payload recieved", parsed);
+    const customer = parsed.data.data.data.object.customer;
+    console.log("customer:", customer);
   },
 );
