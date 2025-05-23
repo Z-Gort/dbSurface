@@ -18,7 +18,7 @@ export const subscriptionCreated = inngest.createFunction(
       throw new Error("Invalid event payload");
     }
 
-    console.log("payload recieved.", parsed)
+    console.log("payload recieved", parsed)
 
     
   },
