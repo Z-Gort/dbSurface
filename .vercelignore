@@ -2,5 +2,5 @@
 !package.json
 !pnpm-lock.yaml
 !vercel.json
-!src/app/api/inngest
-!src/server/inngest
+!src/app/api/inngest/**
+!src/server/inngest/**
