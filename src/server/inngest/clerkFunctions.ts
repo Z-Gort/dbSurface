@@ -4,6 +4,7 @@ import { db } from "~/server/db";
 import { databases, projections, users } from "~/server/db/schema";
 import { deleteBucketFolder } from "~/server/dbUtils";
 import { inngest } from "./client";
+import Stripe from "stripe";
 
 const EmailAddressSchema = z.object({
   id: z.string(),
@@ -43,9 +44,19 @@ export const addUser = inngest.createFunction(
       (e) => e.id === user.primary_email_address_id,
     );
 
+    logger.info("key", process.env.STRIPE_SECRET_KEY);
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    const customer = await stripe.customers.create({
+      email: primaryEmail!.email_address,
+    });
+
+    logger.info("stripe customer", customer);
+
     await db.insert(users).values({
       clerkId: id,
       email: primaryEmail!.email_address,
+      stripeId: customer.id,
     });
   },
 );

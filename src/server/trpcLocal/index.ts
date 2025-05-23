@@ -1,5 +1,5 @@
-import { router } from "./trpcLocal";
 import { localRouter } from "./routes/local";
+import { router } from "./trpcLocal";
 
 export const appRouterLocal = router({
   local: localRouter,

@@ -18,6 +18,7 @@ export const users = pgTable("users", {
     },
   ),
   clerkId: text("clerk_id").unique().notNull(),
+  stripeId: text("stripe_id").unique().notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

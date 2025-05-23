@@ -2,7 +2,7 @@
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
-import { AppSidebar } from "~/components/app-sidebar";
+import { AppSidebar } from "~/components/sidebar/app-sidebar";
 import TrpcProvider from "~/components/Providers";
 import { TabProvider } from "~/components/TabContext";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";

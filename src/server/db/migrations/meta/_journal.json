@@ -92,6 +92,20 @@
       "when": 1746025486831,
       "tag": "0012_broken_solo",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1748033238467,
+      "tag": "0013_regular_the_watchers",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1748033342285,
+      "tag": "0014_furry_lester",
+      "breakpoints": true
     }
   ]
 }

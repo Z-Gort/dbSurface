@@ -1,7 +1,7 @@
 "use client";
 
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import { Code, Database, Eye } from "lucide-react";
+import { Code, CreditCard, Database, Eye } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -14,6 +14,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
+import { BillingPage } from "./Billing";
+import { CreditCardIcon } from "./CreditCardIcon";
 
 // Menu items.
 const items = [
@@ -41,10 +43,10 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="px-0 h-12">
+          <SidebarGroupLabel className="h-12 px-0">
             <img
               src="/logo-transparent_no_name.png"
-              className="h-11 mb-2 sm:h-12"
+              className="mb-2 h-11 sm:h-12"
               alt="dbSurface"
             />
           </SidebarGroupLabel>
@@ -65,7 +67,15 @@ export function AppSidebar() {
         </SidebarGroup>
         <SidebarFooter>
           <SignedIn>
-            <UserButton />
+            <UserButton>
+              <UserButton.UserProfilePage
+                label="Billing"
+                url="billing"
+                labelIcon={<CreditCardIcon />}
+              >
+                <BillingPage />
+              </UserButton.UserProfilePage>
+            </UserButton>
           </SignedIn>
         </SidebarFooter>
       </SidebarContent>

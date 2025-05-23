@@ -1,0 +1,1 @@
+ALTER TABLE "users" ALTER COLUMN "stripe_id" SET NOT NULL;

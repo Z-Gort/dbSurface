@@ -24,6 +24,7 @@
     "@deck.gl/geo-layers": "^9.1.4",
     "@deck.gl/layers": "^9.1.4",
     "@deck.gl/react": "^9.1.4",
+    "@heroicons/react": "^2.2.0",
     "@loaders.gl/arrow": "^4.3.3",
     "@loaders.gl/core": "^4.3.3",
     "@monaco-editor/react": "^4.6.0",
