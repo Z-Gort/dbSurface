@@ -1,3 +1,5 @@
+"use client";
+
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import { AppSidebar } from "~/components/sidebar/app-sidebar";
@@ -6,7 +8,6 @@ import { TabProvider } from "~/components/TabContext";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import { Toaster } from "~/components/ui/toaster";
 import { cn } from "~/lib/tailwindUtils";
-// import { InitializeLocalConnection } from "~/components/InitializeLocalConnection";
 
 const inter = Inter({ subsets: ["latin"] });
 
