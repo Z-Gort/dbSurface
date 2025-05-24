@@ -2,8 +2,10 @@ import { eq } from "drizzle-orm";
 import { db, users } from "../db";
 import { inngest } from "./client";
 import { z } from "zod";
+import Stripe from "stripe";
+import { NonRetriableError } from "inngest";
 
-const Subscription = z.object({
+const subscriptionPayload = z.object({
   data: z.object({
     data: z.object({
       object: z.object({
@@ -13,18 +15,41 @@ const Subscription = z.object({
   }),
 });
 
+export const stripeHookEnvelope = z.object({
+  raw: z.string(),
+  sig: z.string(),
+  evt: z.unknown().optional(),
+});
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
 export const subscriptionCreated = inngest.createFunction(
   { id: "stripe-customer-subscription-created" },
   { event: "stripe/customer.subscription.created" },
-  async ({ event }) => {
-    const parsed = Subscription.safeParse(event);
+  async ({ event, logger }) => {
+    logger.info("event", event);
+    const envParsed = stripeHookEnvelope.safeParse(event.data);
+    if (!envParsed.success) {
+      throw new NonRetriableError("Malformed Inngest envelope");
+    }
+    const { raw, sig } = envParsed.data;
 
-    if (!parsed.success) {
-      console.error("Invalid event payload", parsed.error);
-      throw new Error("Invalid event payload");
+    let stripeEvent: Stripe.Event;
+    try {
+      stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
+    } catch {
+      throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    const customerId = parsed.data.data.data.object.customer;
+    const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
+    if (!payloadParsed.success) {
+      // Rare: Stripe changed the shape and your schema is stale
+      throw new NonRetriableError("Unexpected Stripe payload shape");
+    }
+    const sub = payloadParsed.data.data.data.object;
+    const customerId = sub.customer;
 
     await db
       .update(users)
