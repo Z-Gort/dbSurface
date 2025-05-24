@@ -30,7 +30,7 @@ const ClerkDeleteSchema = z.object({
 export const addUser = inngest.createFunction(
   { id: "add-user-from-clerk" },
   { event: "clerk/user.created" },
-  async ({ event }) => {
+  async ({ event, logger }) => {
     const parsed = ClerkUpdateAddSchema.safeParse(event);
 
     if (!parsed.success) {

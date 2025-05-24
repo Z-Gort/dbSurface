@@ -1,6 +1,13 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 export default clerkMiddleware(async (auth, request) => {
+   const { pathname } = request.nextUrl;
+
+  if (pathname === "/api/inngest" || pathname.startsWith("/api/inngest/")) {
+    return NextResponse.next();
+  }
+  
   await auth.protect();
 });
 

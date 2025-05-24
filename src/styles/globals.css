@@ -85,20 +85,19 @@
   }
 }
 
-/* In your CSS file */
+
 .bg-table-header-light {
-  background-color: hsl(var(--secondary)); /* or any light mode variable you prefer */
+  background-color: hsl(var(--secondary)); 
 }
 
 .dark .bg-table-header-dark {
-  background-color: hsl(var(--sidebar-background)); /* or the appropriate dark mode variable */
+  background-color: hsl(var(--sidebar-background));
 }
 
 table {
-  width: 100%; /* Optional: ensures the table takes up full width */
+  width: 100%; 
 }
 
-/* In your global or component CSS */
 .rdg [role="gridcell"] {
   border: 0.0000000001px solid lightgrey !important;
 }

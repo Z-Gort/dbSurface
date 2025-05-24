@@ -18,7 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        elements: {
+          userButtonPopoverRootBox: {
+            pointerEvents: "auto", //when sidebar is closed, make sure clicks go through
+          },
+        },
+      }}
+    >
       <html lang="en" className="h-full">
         <body
           className={cn(
