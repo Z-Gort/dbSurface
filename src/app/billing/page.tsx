@@ -3,6 +3,7 @@
 import { trpc } from "~/lib/client";
 import { Button } from "~/components/ui/button";
 import { PricingSection } from "~/components/Billing/PricingSection";
+import "~/styles/globals.css";
 
 export default function BillingPage() {
   const createCustomerPortal = trpc.stripe.createCustomerPortal.useMutation({

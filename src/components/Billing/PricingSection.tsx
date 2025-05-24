@@ -1,14 +1,19 @@
+import { useRouter } from "next/navigation";
 import { PlanCard } from "../Billing/PlanCard";
+import { trpc } from "~/lib/client";
 
-// You already fetched these from tRPC or props:
-const currentPriceId = "sdf";
+const currentPlan = "sdf";
 const subscriptionId = "asd";
 
 export function PricingSection() {
+  const router = useRouter();
+  const checkout = trpc.stripe.createCheckoutSession.useMutation({
+    onSuccess: ({ url }) => router.push(url!),   // redirect to Stripe
+  });
+  
   return (
     <section className="mx-auto max-w-5xl py-8 lg:py-16">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-        {/* Free */}
         <PlanCard
           title="Free"
           price="$0"
@@ -17,30 +22,27 @@ export function PricingSection() {
             "250,000 projected rows",
             "Support on GitHub",
           ]}
-          isCurrent={currentPriceId === null}
-
-          // No button for free plan
+          isCurrent={true}
         />
 
-        {/* Pro */}
         <PlanCard
           title="Pro"
           price="$13"
           features={[
             "200 projections",
             "40,000,000 projected rows",
-            "Support on GitHub",
+            "Support on GitHub",   
           ]}
-          isCurrent={true}
+          isCurrent={false}
           buttonLabel={
-            currentPriceId === "price_pro" ? "Manage subscription" : "Upgrade"
+            currentPlan === "price_pro" ? "Manage subscription" : "Upgrade"
           }
           accent="primary"
           onClick={() => {
-            if (currentPriceId === "price_pro") {
+            if (currentPlan === "price_pro") {
               // create Customer‑Portal deep link ➜ redirect
             } else {
-              // create Checkout Session ➜ redirect
+              checkout.mutate();
             }
           }}
         />
