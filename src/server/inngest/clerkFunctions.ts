@@ -5,6 +5,7 @@ import { databases, projections, users } from "~/server/db/schema";
 import { deleteBucketFolder } from "~/server/dbUtils";
 import { inngest } from "./client";
 import Stripe from "stripe";
+import { NonRetriableError } from "inngest";
 
 const EmailAddressSchema = z.object({
   id: z.string(),
@@ -35,7 +36,7 @@ export const addUser = inngest.createFunction(
 
     if (!parsed.success) {
       console.error("Invalid event payload", parsed.error);
-      throw new Error("Invalid event payload");
+      throw new NonRetriableError("Invalid event payload");
     }
 
     const user = parsed.data.data;
@@ -70,7 +71,7 @@ export const updateUser = inngest.createFunction(
 
     if (!parsed.success) {
       console.error("Invalid event payload", parsed.error);
-      throw new Error("Invalid event payload");
+      throw new NonRetriableError("Invalid event payload");
     }
 
     const user = parsed.data.data;
@@ -94,7 +95,7 @@ export const deleteUser = inngest.createFunction(
 
     if (!parsed.success) {
       console.error("Invalid event payload", parsed.error);
-      throw new Error("Invalid event payload");
+      throw new NonRetriableError("Invalid event payload");
     }
     const user = parsed.data.data;
     const { id: clerkId } = user;

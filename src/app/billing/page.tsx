@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 import { PricingSection } from "~/components/Billing/PricingSection";
 import "~/styles/globals.css";
 
-export default function BillingPage() {
+export default function Billing() {
   const createCustomerPortal = trpc.stripe.createCustomerPortal.useMutation({
     onSuccess: ({ url }) => {
       window.location.assign(url);

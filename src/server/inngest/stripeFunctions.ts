@@ -62,14 +62,25 @@ export const subscriptionDeleted = inngest.createFunction(
   { id: "stripe-customer-subscription-deleted" },
   { event: "stripe/customer.subscription.deleted" },
   async ({ event }) => {
-    const parsed = Subscription.safeParse(event);
+    const envParsed = stripeHookEnvelope.safeParse(event.data);
+    if (!envParsed.success) {
+      throw new NonRetriableError("Malformed Inngest envelope");
+    }
+    const { raw, sig } = envParsed.data;
 
-    if (!parsed.success) {
-      console.error("Invalid event payload", parsed.error);
-      throw new Error("Invalid event payload");
+    let stripeEvent: Stripe.Event;
+    try {
+      stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
+    } catch {
+      throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    const customerId = parsed.data.data.data.object.customer;
+    const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
+    if (!payloadParsed.success) {
+      throw new NonRetriableError("Unexpected Stripe payload shape");
+    }
+    const sub = payloadParsed.data.data.data.object;
+    const customerId = sub.customer;
 
     await db
       .update(users)
