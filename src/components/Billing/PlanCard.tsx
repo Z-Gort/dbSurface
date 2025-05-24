@@ -11,6 +11,7 @@ export interface PlanCardProps {
   buttonLabel?: string;
   onClick?: () => void;
   accent?: "default" | "primary";
+  loading?: boolean;
 }
 
 export function PlanCard({
@@ -21,6 +22,7 @@ export function PlanCard({
   isCurrent,
   buttonLabel,
   onClick,
+  loading,
   accent = "default",
 }: PlanCardProps) {
   const accentRing =
@@ -67,7 +69,7 @@ export function PlanCard({
         <div className="my-2" />
 
         {buttonLabel && (
-          <Button disabled={isCurrent} onClick={onClick} className="w-full">
+          <Button disabled={loading} onClick={onClick} className="w-full">
             {buttonLabel}
           </Button>
         )}

@@ -8,7 +8,7 @@ const subscriptionId = "asd";
 export function PricingSection() {
   const router = useRouter();
   const checkout = trpc.stripe.createCheckoutSession.useMutation({
-    onSuccess: ({ url }) => router.push(url!),   // redirect to Stripe
+    onSuccess: ({ url }) => router.push(url!),
   });
   
   return (
@@ -45,6 +45,7 @@ export function PricingSection() {
               checkout.mutate();
             }
           }}
+          loading={checkout.isLoading}
         />
       </div>
     </section>

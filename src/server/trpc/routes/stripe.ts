@@ -19,7 +19,7 @@ export const stripeRouter = router({
 
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeId,
-      return_url: "http://localhost:3000",
+      return_url: "http://localhost:4800",
     });
 
     return { url: session.url };
@@ -45,8 +45,8 @@ export const stripeRouter = router({
           quantity: 1,
         },
       ],
-      success_url: "http://localhost:3000/billing",
-      cancel_url: "http://localhost:3000/billing",
+      success_url: "http://localhost:4800/billing",
+      cancel_url: "http://localhost:4800/billing",
     });
 
     return { url: session.url };
