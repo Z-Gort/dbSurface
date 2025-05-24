@@ -5,7 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
-  uuid
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -19,6 +19,7 @@ export const users = pgTable("users", {
   ),
   clerkId: text("clerk_id").unique().notNull(),
   stripeId: text("stripe_id").unique().notNull(),
+  plan: text("plan").notNull().default("free"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -46,9 +47,9 @@ export const projections = pgTable("projections", {
   schema: text("schema").notNull(),
   table: text("table").notNull(),
   columns: text("columns")
-    .array()                                  // makes this a `text[]` in Postgres :contentReference[oaicite:0]{index=0}
+    .array()
     .notNull()
-    .default(sql`'{}'::text[]`),   
+    .default(sql`'{}'::text[]`),
   numberPoints: integer("number_points").notNull(),
   status: text("status").notNull().default("creating"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
