@@ -28,7 +28,6 @@ def finalize_projection(metadata, digest_by_col, projection_id, supabase, num_ro
         {"status": "live", "number_points": num_rows}
     ).eq("projection_id", projection_id).execute()
 
-
 def make_arrow_schema(run_dir: str, vector_col: str, primary_key_col: str):
     import glob, pyarrow.dataset as ds, pyarrow as pa, os
 

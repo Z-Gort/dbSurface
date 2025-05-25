@@ -144,6 +144,7 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
       primaryKeyColumn: validateResult.data!.primaryKeyColumn,
       vectorColumn: validateResult.data!.vectorColumn,
       displayName: formData.title,
+      remainingRows: remainingRows,
       trimmedCols: validateResult.data!.trimmedCols,
     });
 

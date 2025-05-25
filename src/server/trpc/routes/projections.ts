@@ -66,6 +66,7 @@ export const projectionsRouter = router({
         numberPoints: z.number(),
         vectorColumn: z.string(),
         displayName: z.string(),
+        remainingRows: z.number(),
         trimmedCols: z.array(z.string()),
       }),
     )
@@ -80,6 +81,7 @@ export const projectionsRouter = router({
         vectorColumn,
         displayName,
         trimmedCols,
+        remainingRows
       } = input;
 
       await db
@@ -111,6 +113,7 @@ export const projectionsRouter = router({
         projectionId: insertedProjection!.projectionId,
         numberPoints,
         databaseId,
+        remainingRows
       });
 
       return { projectionId: insertedProjection!.projectionId };

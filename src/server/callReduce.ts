@@ -6,6 +6,7 @@ interface reduceColumnProps {
   projectionId: string;
   numberPoints: number;
   databaseId: string;
+  remainingRows: number;
 }
 
 export function reduceColumn({
@@ -16,6 +17,7 @@ export function reduceColumn({
   projectionId,
   numberPoints,
   databaseId,
+  remainingRows
 }: reduceColumnProps) {
   const endpointUrl = new URL(process.env.MODAL_ENDPOINT_URL!);
 
@@ -26,6 +28,7 @@ export function reduceColumn({
   endpointUrl.searchParams.append("projection_id", projectionId);
   endpointUrl.searchParams.append("database_id", databaseId);
   endpointUrl.searchParams.append("total_rows", numberPoints.toString());
+  endpointUrl.searchParams.append("remaining_rows", remainingRows.toString());
 
   try {
     void fetch(endpointUrl.toString(), {

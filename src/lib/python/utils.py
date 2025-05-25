@@ -1,3 +1,67 @@
+def check_and_update_usage(
+    num_shards: int,
+    run_dir: str,
+    remaining_rows: int,
+    database_id: str,
+    total_rows_estimate_int: int,
+    supabase_client,
+    vol
+) -> None:
+    import pyarrow.dataset as ds
+    import os, glob
+    import glob
+    import time
+
+    MAX_WAIT = 60
+    step = 2
+    waited = 0
+
+    while (
+        True
+    ):  # we wait to make sure all shards' updates have been committed--can't commit in each shard due to volume concurrent writer limit
+        vol.reload()
+        arrow_files = glob.glob(os.path.join(run_dir, "*.arrow"))
+        if len(arrow_files) == num_shards:
+            break
+        if waited >= MAX_WAIT:
+            raise RuntimeError(
+                f"Only {len(arrow_files)}/{num_shards} shards committed "
+                "after a full minute – giving up."
+            )
+        time.sleep(step)
+        waited += step
+
+    ds_obj = ds.dataset(run_dir, format="arrow")
+    num_rows = ds_obj.count_rows()
+
+    db_res = (
+        supabase_client.table("databases")
+        .select("user_id")
+        .eq("database_id", database_id)
+        .single()
+        .execute()
+    )
+    user_id = db_res.data["user_id"]
+    user_res = (
+        supabase_client.table("users")
+        .select("monthly_projected_rows")
+        .eq("user_id", user_id)
+        .single()
+        .execute()
+    )
+    current_monthly_rows = user_res.data["monthly_projected_rows"]
+    difference = num_rows - total_rows_estimate_int
+    monthly_rows = current_monthly_rows + difference
+    supabase_client.table("users").update({"monthly_projected_rows": monthly_rows}).eq(
+        "user_id", user_id
+    ).execute()
+
+    if num_rows > remaining_rows:
+        raise RuntimeError(
+            f"Usage limit exceeded: cancelling reduce."
+        )
+
+
 def get_num_shards(total_rows: int, creds) -> int:
     import math
 
@@ -212,8 +276,6 @@ def embed_to_2d_helper(
     n_neighbors: int = 15,
     batch_rows: int = 100_000,
 ):
-    import time
-
     """
     Write primary_key, x, y to /cache/xy.arrow
     """
@@ -222,6 +284,7 @@ def embed_to_2d_helper(
     from cuml.manifold import UMAP
     import glob
     import multiprocessing as mp
+    import time
 
     MAX_WAIT = 60
     step = 2
@@ -319,7 +382,7 @@ def embed_to_2d_helper(
     ranges = pmax - pmin
 
     X_clip = np.clip(X_low, pmin, pmax)
-    
+
     X_norm = (X_clip - pmin) / ranges * 100.0
     X_norm = np.clip(X_norm, 0.0, 100.0)
 

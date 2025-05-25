@@ -8,7 +8,7 @@ vol = modal.Volume.from_name("reduction-files", create_if_missing=True)
 
 @app.function(
     image=modal.Image.debian_slim()
-    .pip_install("psycopg[binary]", "supabase")
+    .pip_install("psycopg[binary]", "supabase", "pyarrow")
     .add_local_python_source("utils"),
     secrets=[modal.Secret.from_name("supabase-credentials")],
     volumes={MOUNT: vol},
@@ -22,8 +22,9 @@ def orchestrator(
     projection_id: str,
     database_id: str,
     total_rows: str,
+    remaining_rows: str,
 ):
-    from utils import get_num_shards, get_creds, failed
+    from utils import get_num_shards, get_creds, failed as fail_update, check_and_update_usage
     import os
     from supabase import create_client
 
@@ -36,9 +37,9 @@ def orchestrator(
         os.environ["SUPABASE_KEY"],
     )
     try:
-        total_rows = int(total_rows)
+        total_rows_estimate_int = int(total_rows)
         creds = get_creds(database_id)
-        NUM_SHARDS = get_num_shards(total_rows, creds)
+        NUM_SHARDS = get_num_shards(total_rows_estimate_int, creds)
         print(f"NUM_SHARDS: {NUM_SHARDS}")
 
         const_kw = dict(
@@ -65,11 +66,17 @@ def orchestrator(
                 f"↩︎  {ok} shards ok, {len(failed)} hit pool limit; "
                 f"retrying with wave_size={wave_size} (was {prev})"
             )
+
+        remaining_rows_int = int(remaining_rows)
+        check_and_update_usage(
+            NUM_SHARDS, run_dir, remaining_rows_int, database_id, total_rows_estimate_int, supabase_client, vol
+        )  # will error if usage exceeded
+
         embed_to_2d.spawn(
             primary_key_col, vector_col, run_dir, projection_id, NUM_SHARDS
         )
     except Exception:
-        failed(supabase_client, projection_id)
+        fail_update(supabase_client, projection_id)
         cleanup_volume.spawn(projection_id)
 
 
@@ -267,6 +274,7 @@ def create_projection(
     projection_id: str,
     database_id: str,
     total_rows: str,
+    remaining_rows: str,
 ):
     orchestrator.spawn(
         schema,
@@ -276,6 +284,7 @@ def create_projection(
         projection_id,
         database_id,
         total_rows,
+        remaining_rows,
     )
     return {"status": "started"}  # return immidiately to avoid https timeout
 
