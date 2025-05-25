@@ -9,6 +9,7 @@ export interface PlanCardProps {
   features: string[];
   isCurrent?: boolean;
   buttonLabel?: string;
+  variant?: "default" | "outline",
   onClick?: () => void;
   accent?: "default" | "primary";
   loading?: boolean;
@@ -21,6 +22,7 @@ export function PlanCard({
   features,
   isCurrent,
   buttonLabel,
+  variant,
   onClick,
   loading,
   accent = "default",
@@ -69,7 +71,7 @@ export function PlanCard({
         <div className="my-2" />
 
         {buttonLabel && (
-          <Button disabled={loading} onClick={onClick} className="w-full">
+          <Button variant={variant} disabled={loading} onClick={onClick} className="w-full">
             {buttonLabel}
           </Button>
         )}

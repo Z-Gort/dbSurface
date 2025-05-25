@@ -51,4 +51,14 @@ export const stripeRouter = router({
 
     return { url: session.url };
   }),
+  getUserPlan: protectedProcedure.query(async ({ ctx }) => {
+    const { userId: clerkId } = ctx.auth;
+
+    const stripeResult = await db
+      .select({ plan: users.plan })
+      .from(users)
+      .where(eq(users.clerkId, clerkId));
+    
+    return stripeResult[0]!.plan;
+  }),
 });

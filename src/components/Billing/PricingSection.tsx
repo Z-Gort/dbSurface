@@ -2,15 +2,16 @@ import { useRouter } from "next/navigation";
 import { PlanCard } from "../Billing/PlanCard";
 import { trpc } from "~/lib/client";
 
-const currentPlan = "sdf";
-const subscriptionId = "asd";
-
 export function PricingSection() {
   const router = useRouter();
   const checkout = trpc.stripe.createCheckoutSession.useMutation({
     onSuccess: ({ url }) => router.push(url!),
   });
-  
+  const customerPortal = trpc.stripe.createCustomerPortal.useMutation({
+    onSuccess: ({ url }) => router.push(url),
+  });
+  const { data: currentPlan } = trpc.stripe.getUserPlan.useQuery();
+
   return (
     <section className="mx-auto max-w-5xl py-8 lg:py-16">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
@@ -22,7 +23,7 @@ export function PricingSection() {
             "250,000 projected rows",
             "Support on GitHub",
           ]}
-          isCurrent={true}
+          isCurrent={currentPlan === "free"}
         />
 
         <PlanCard
@@ -31,21 +32,22 @@ export function PricingSection() {
           features={[
             "200 projections",
             "40,000,000 projected rows",
-            "Support on GitHub",   
+            "Support on GitHub",
           ]}
-          isCurrent={false}
+          isCurrent={currentPlan === "pro"}
           buttonLabel={
-            currentPlan === "price_pro" ? "Manage subscription" : "Upgrade"
+            currentPlan === "pro" ? "Manage Subscription" : "Upgrade"
           }
+          variant={currentPlan === "pro" ? "outline" : "default"}
           accent="primary"
           onClick={() => {
-            if (currentPlan === "price_pro") {
-              // create Customer‑Portal deep link ➜ redirect
+            if (currentPlan === "pro") {
+              customerPortal.mutate();
             } else {
               checkout.mutate();
             }
           }}
-          loading={checkout.isLoading}
+          loading={checkout.isLoading || customerPortal.isLoading}
         />
       </div>
     </section>
