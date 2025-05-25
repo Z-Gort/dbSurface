@@ -38,11 +38,15 @@ export const subscriptionCreated = inngest.createFunction(
 
     let stripeEvent: Stripe.Event;
     try {
-      stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
+      stripeEvent = stripe.webhooks.constructEvent(
+        Buffer.from(raw, "base64"),
+        sig,
+        endpointSecret,
+      );
     } catch {
       throw new NonRetriableError("Invalid Stripe signature");
     }
-
+    logger.info("evt.data", stripeEvent);
     const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       // Rare: Stripe changed the shape and your schema is stale
