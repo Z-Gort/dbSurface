@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "subscription_period_end" timestamp DEFAULT now() NOT NULL;

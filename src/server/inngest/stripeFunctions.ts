@@ -5,20 +5,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
 import { deleteBucketFolder } from "../dbUtils";
-
-const subscriptionPayload = z.object({
-  data: z.object({
-    object: z.object({
-      customer: z.string(),
-    }),
-  }),
-});
-
-export const stripeHookEnvelope = z.object({
-  raw: z.string(),
-  sig: z.string(),
-  evt: z.unknown().optional(),
-});
+import { invoicePaidSchema, stripeHookEnvelope, subscriptionSchema } from "./zodSchemas";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -41,7 +28,7 @@ export const subscriptionCreated = inngest.createFunction(
       throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
+    const payloadParsed = subscriptionSchema.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       throw new NonRetriableError("Unexpected Stripe payload shape");
     }
@@ -72,7 +59,7 @@ export const subscriptionDeleted = inngest.createFunction(
       throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
+    const payloadParsed = subscriptionSchema.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       throw new NonRetriableError("Unexpected Stripe payload shape");
     }
@@ -88,7 +75,7 @@ export const subscriptionDeleted = inngest.createFunction(
       .select()
       .from(users)
       .where(eq(users.stripeId, customerId));
-    
+
     if (foundUsers.length === 0) {
       return; //this event must have been triggered by a customer deletion
     }
@@ -110,7 +97,42 @@ export const subscriptionDeleted = inngest.createFunction(
         const projectionId = proj.projectionId;
         await deleteBucketFolder("quadtree-tiles", projectionId);
       }
-      await db.delete(projections).where(eq(projections.databaseId, database.databaseId));
+      await db
+        .delete(projections)
+        .where(eq(projections.databaseId, database.databaseId));
     }
+  },
+);
+
+export const invoicePaid = inngest.createFunction(
+  { id: "stripe-invoice-paid" },
+  { event: "stripe/invoice.paid" },
+  async ({ event }) => {
+    const envParsed = stripeHookEnvelope.safeParse(event.data);
+    if (!envParsed.success) {
+      throw new NonRetriableError("Malformed Inngest envelope");
+    }
+    const { raw, sig } = envParsed.data;
+
+    let stripeEvent;
+    try {
+      stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
+    } catch {
+      throw new NonRetriableError("Invalid Stripe signature");
+    }
+
+    const payloadParsed = invoicePaidSchema.safeParse(stripeEvent);
+    if (!payloadParsed.success) {
+      throw new NonRetriableError("Unexpected Stripe payload shape");
+    }
+    const invoice = payloadParsed.data.data.object;
+    const customerId = invoice.customer;
+    const periodEnd = invoice.period_end;
+    const periodEndDate = new Date(periodEnd * 1_000);
+
+    await db
+      .update(users)
+      .set({ subscriptionPeriodEnd: periodEndDate, monthlyProjectedRows: 0, monthlyProjections: 0 })
+      .where(eq(users.stripeId, customerId));
   },
 );

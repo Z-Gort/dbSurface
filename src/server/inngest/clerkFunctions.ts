@@ -6,27 +6,7 @@ import { deleteBucketFolder } from "~/server/dbUtils";
 import { inngest } from "./client";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
-
-const EmailAddressSchema = z.object({
-  id: z.string(),
-  email_address: z.string().email(),
-});
-
-const ClerkUserSchema = z.object({
-  id: z.string(),
-  email_addresses: z.array(EmailAddressSchema),
-  primary_email_address_id: z.string(),
-});
-
-const ClerkUpdateAddSchema = z.object({
-  data: ClerkUserSchema,
-});
-
-const ClerkDeleteSchema = z.object({
-  data: z.object({
-    id: z.string(),
-  }),
-});
+import { ClerkDeleteSchema, ClerkUpdateAddSchema } from "./zodSchemas";
 
 export const addUser = inngest.createFunction(
   { id: "add-user-from-clerk" },
