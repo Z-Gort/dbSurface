@@ -106,6 +106,7 @@ export const subscriptionDeleted = inngest.createFunction(
         const projectionId = proj.projectionId;
         await deleteBucketFolder("quadtree-tiles", projectionId);
       }
+      await db.delete(projections).where(eq(projections.databaseId, database.databaseId));
     }
   },
 );
