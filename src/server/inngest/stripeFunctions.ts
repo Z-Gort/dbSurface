@@ -28,25 +28,25 @@ const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 export const subscriptionCreated = inngest.createFunction(
   { id: "stripe-customer-subscription-created" },
   { event: "stripe/customer.subscription.created" },
-  async ({ event, logger }) => {
-    logger.info("event", event);
+  async ({ event }) => {
+    console.log("event", event);
     const envParsed = stripeHookEnvelope.safeParse(event.data);
     if (!envParsed.success) {
       throw new NonRetriableError("Malformed Inngest envelope");
     }
     const { raw, sig } = envParsed.data;
-
+    console.log("raw", raw, "sig", sig, "endpoint secret", endpointSecret);
     let stripeEvent: Stripe.Event;
     try {
       stripeEvent = stripe.webhooks.constructEvent(
-        Buffer.from(raw, "base64"),
+        raw,
         sig,
         endpointSecret,
       );
     } catch {
       throw new NonRetriableError("Invalid Stripe signature");
     }
-    logger.info("evt.data", stripeEvent);
+
     const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       // Rare: Stripe changed the shape and your schema is stale
