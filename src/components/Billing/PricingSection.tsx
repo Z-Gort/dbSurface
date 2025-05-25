@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
-import { PlanCard } from "../Billing/PlanCard";
 import { trpc } from "~/lib/client";
+import { PlanCard } from "../Billing/PlanCard";
 
 export function PricingSection() {
   const router = useRouter();
@@ -10,7 +10,30 @@ export function PricingSection() {
   const customerPortal = trpc.stripe.createCustomerPortal.useMutation({
     onSuccess: ({ url }) => router.push(url),
   });
-  const { data: currentPlan } = trpc.stripe.getUserPlan.useQuery();
+  const getCurrentPlan = trpc.stripe.getUserPlan.useQuery();
+  const currentPlan = getCurrentPlan.data;
+
+  function getButtonLabel(currentPlan: string | undefined) {
+    if (getCurrentPlan.isLoading) {
+      return "Loading...";
+    }
+    if (currentPlan === "pro") {
+      return "Manage Subscription";
+    } else {
+      return "Upgrade";
+    }
+  }
+
+  function getVariant(currentPlan: string | undefined) {
+    if (getCurrentPlan.isLoading) {
+      return "outline";
+    }
+    if (currentPlan === "pro") {
+      return "outline";
+    } else {
+      return "default";
+    }
+  }
 
   return (
     <section className="mx-auto max-w-5xl py-8 lg:py-16">
@@ -35,10 +58,8 @@ export function PricingSection() {
             "Support on GitHub",
           ]}
           isCurrent={currentPlan === "pro"}
-          buttonLabel={
-            currentPlan === "pro" ? "Manage Subscription" : "Upgrade"
-          }
-          variant={currentPlan === "pro" ? "outline" : "default"}
+          buttonLabel={getButtonLabel(currentPlan)}
+          variant={getVariant(currentPlan)}
           accent="primary"
           onClick={() => {
             if (currentPlan === "pro") {
@@ -47,7 +68,11 @@ export function PricingSection() {
               checkout.mutate();
             }
           }}
-          loading={checkout.isLoading || customerPortal.isLoading}
+          loading={
+            checkout.isLoading ||
+            customerPortal.isLoading ||
+            getCurrentPlan.isLoading
+          }
         />
       </div>
     </section>
