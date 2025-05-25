@@ -31,7 +31,7 @@ const ClerkDeleteSchema = z.object({
 export const addUser = inngest.createFunction(
   { id: "add-user-from-clerk" },
   { event: "clerk/user.created" },
-  async ({ event, logger }) => {
+  async ({ event }) => {
     const parsed = ClerkUpdateAddSchema.safeParse(event);
 
     if (!parsed.success) {
@@ -45,14 +45,10 @@ export const addUser = inngest.createFunction(
       (e) => e.id === user.primary_email_address_id,
     );
 
-    logger.info("key", process.env.STRIPE_SECRET_KEY);
-
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
     const customer = await stripe.customers.create({
       email: primaryEmail!.email_address,
     });
-
-    logger.info("stripe customer", customer);
 
     await db.insert(users).values({
       clerkId: id,

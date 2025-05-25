@@ -20,6 +20,8 @@ export const users = pgTable("users", {
   clerkId: text("clerk_id").unique().notNull(),
   stripeId: text("stripe_id").unique().notNull(),
   plan: text("plan").notNull().default("free"),
+  monthlyProjectedRows: integer("monthly_projected_rows").notNull().default(0),
+  monthlyProjections: integer("monthly_projections").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -52,10 +52,10 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
             await trpcContext.client.projections.getProjection.query({
               projectionId,
             });
-          if (statusResult.projection.status !== "creating") {
+          if (statusResult.projection!.status !== "creating") {
             clearInterval(interval);
             await trpcContext.projections.listActiveDbProjections.invalidate();
-            if (statusResult.projection.status === "live") {
+            if (statusResult.projection!.status === "live") {
               toast({
                 title: `Projection ${formData.title} is live.`,
                 className: "bg-green-100 text-green-700",
@@ -94,9 +94,23 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
       return;
     }
 
+    
+    const { remainingRows, remainingProjections } = await trpcContext.client.users.remainingUsage.query();
     const validateResult = await validateProjectionQuery.refetch();
     if (validateResult.error) {
       setErrorMessage(validateResult.error.message);
+      setIsLoading(false);
+      return;
+    }
+
+    if (remainingProjections === 0) {
+      setErrorMessage("You have reached the limit on your monthly projections. You can go to Usage & Billing to unlock additional projections if you are on the free plan.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (remainingRows - validateResult.data!.numberPoints < 0) {
+      setErrorMessage("This projection exceeds your monthly projected rows. You can go to Usage & Billing to unlock additional rows if you are on the free plan.");
       setIsLoading(false);
       return;
     }
@@ -161,9 +175,9 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
                   Select a table with a vector column to make a projection.
                 </p>
                 <p>
-                  (This can take a few minutes.){" "}
+                  (This may take a few minutes.){" "}
                   <a
-                    href="https://github.com/Z-Gort/dbSurface#learn-more"
+                    href="https://github.com/Z-Gort/dbSurface#notes-on-projection-creation"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"

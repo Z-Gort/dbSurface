@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm/expressions";
 import { z } from "zod";
 import { reduceColumn } from "~/server/callReduce";
 import { db } from "~/server/db";
-import { projections } from "~/server/db/schema";
+import { projections, users } from "~/server/db/schema";
 import { deleteBucketFolder } from "~/server/dbUtils";
 import { protectedProcedure, router } from "../trpc";
 import { sql, asc } from "drizzle-orm";
@@ -69,7 +69,8 @@ export const projectionsRouter = router({
         trimmedCols: z.array(z.string()),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      const { userId } = ctx.auth;
       const {
         databaseId,
         schema,
@@ -80,6 +81,14 @@ export const projectionsRouter = router({
         displayName,
         trimmedCols,
       } = input;
+
+      await db
+        .update(users)
+        .set({
+          monthlyProjections: sql`${users.monthlyProjections} + 1`,
+          monthlyProjectedRows: sql`${users.monthlyProjectedRows} + ${numberPoints}`,
+        })
+        .where(eq(users.clerkId, userId));
 
       const [insertedProjection] = await db
         .insert(projections)

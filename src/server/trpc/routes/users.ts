@@ -3,8 +3,22 @@ import Stripe from "stripe";
 import { db, users } from "~/server/db";
 import { router } from "../../trpcLocal/trpcLocal";
 import { protectedProcedure } from "../trpc";
+import { z } from "zod";
 
-export const stripeRouter = router({
+export const usersRouter = router({
+  remainingUsage: protectedProcedure.query(async ({ ctx }) => {
+    const { userId: clerkId } = ctx.auth;
+
+    const user = await db.select().from(users).where(eq(users.clerkId, clerkId));
+    const usedRows = user[0]!.monthlyProjectedRows;
+    const usedProjections = user[0]!.monthlyProjections;
+    const totalRows = user[0]!.plan === "free" ? 250_000 : 40_000_000;
+    const totalProjections = user[0]!.plan === "free" ? 10 : 200;
+    const remainingRows = totalRows - usedRows;
+    const remainingProjections = totalProjections - usedProjections;
+
+    return { remainingRows, remainingProjections };
+  }),
   createCustomerPortal: protectedProcedure.mutation(async ({ ctx }) => {
     const { userId: clerkId } = ctx.auth;
 
@@ -38,10 +52,10 @@ export const stripeRouter = router({
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      customer: stripeId, 
+      customer: stripeId,
       line_items: [
         {
-          price: process.env.STRIPE_PRO_PRICE_ID!, 
+          price: process.env.STRIPE_PRO_PRICE_ID!,
           quantity: 1,
         },
       ],
@@ -58,7 +72,7 @@ export const stripeRouter = router({
       .select({ plan: users.plan })
       .from(users)
       .where(eq(users.clerkId, clerkId));
-    
+
     return stripeResult[0]!.plan;
   }),
 });
