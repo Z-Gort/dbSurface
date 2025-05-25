@@ -40,7 +40,6 @@ export const subscriptionCreated = inngest.createFunction(
       throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    console.log("stripeEvent", stripeEvent);
     const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       throw new NonRetriableError("Unexpected Stripe payload shape");
@@ -65,7 +64,7 @@ export const subscriptionDeleted = inngest.createFunction(
     }
     const { raw, sig } = envParsed.data;
 
-    let stripeEvent: Stripe.Event;
+    let stripeEvent;
     try {
       stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
     } catch {
