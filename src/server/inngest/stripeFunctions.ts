@@ -143,7 +143,7 @@ export const invoicePaid = inngest.createFunction(
     }
     const invoice = payloadParsed.data.data.object;
     const customerId = invoice.customer;
-    const periodEnd = invoice.period_end;
+    const periodEnd = invoice.lines.data[0].period.end;
     const periodEndDate = new Date(periodEnd * 1_000);
 
     await db

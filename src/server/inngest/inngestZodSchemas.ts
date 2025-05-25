@@ -5,13 +5,34 @@ export const subscriptionSchema = z.object({
     object: z.object({
       customer: z.string(),
       items: z.object({
-        data: z.array(
-          z.object({
-            price: z.object({
-              id: z.string(),
+        data: z
+          .array(
+            z.object({
+              price: z.object({
+                id: z.string(),
+              }),
             }),
-          }),
-        ).nonempty(),
+          )
+          .nonempty(),
+      }),
+    }),
+  }),
+});
+
+export const invoicePaidSchema = z.object({
+  data: z.object({
+    object: z.object({
+      customer: z.string(),
+      lines: z.object({
+        data: z
+          .array(
+            z.object({
+              period: z.object({
+                end: z.number(),
+              }),
+            }),
+          )
+          .nonempty(),
       }),
     }),
   }),
@@ -41,14 +62,5 @@ export const ClerkUpdateAddSchema = z.object({
 export const ClerkDeleteSchema = z.object({
   data: z.object({
     id: z.string(),
-  }),
-});
-
-export const invoicePaidSchema = z.object({
-  data: z.object({
-    object: z.object({
-      customer: z.string(),
-      period_end: z.number(),
-    }),
   }),
 });
