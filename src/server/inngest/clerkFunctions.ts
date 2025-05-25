@@ -122,6 +122,8 @@ export const deleteUser = inngest.createFunction(
         const projectionId = proj.projectionId;
         await deleteBucketFolder("quadtree-tiles", projectionId);
       }
+
+      await db.delete(projections).where(eq(projections.databaseId, database.databaseId));
     }
 
     await db.delete(users).where(eq(users.clerkId, clerkId));
