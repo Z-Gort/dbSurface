@@ -5,13 +5,13 @@ export const subscriptionSchema = z.object({
     object: z.object({
       customer: z.string(),
       items: z.object({
-        data: z
-          .array(
-            z.object({
-              current_period_end: z.number(),
+        data: z.array(
+          z.object({
+            price: z.object({
+              id: z.string(),
             }),
-          )
-          .nonempty(),
+          }),
+        ).nonempty(),
       }),
     }),
   }),

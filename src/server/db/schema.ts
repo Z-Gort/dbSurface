@@ -22,7 +22,7 @@ export const users = pgTable("users", {
   plan: text("plan").notNull().default("free"),
   monthlyProjectedRows: integer("monthly_projected_rows").notNull().default(0),
   monthlyProjections: integer("monthly_projections").notNull().default(0),
-  subscriptionPeriodEnd: timestamp("subscription_period_end").notNull().defaultNow(),
+  subscriptionPeriodEnd: timestamp("subscription_period_end").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

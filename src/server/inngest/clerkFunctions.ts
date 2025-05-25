@@ -6,7 +6,9 @@ import { deleteBucketFolder } from "~/server/dbUtils";
 import { inngest } from "./client";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
-import { ClerkDeleteSchema, ClerkUpdateAddSchema } from "./zodSchemas";
+import { ClerkDeleteSchema, ClerkUpdateAddSchema } from "./inngestZodSchemas";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const addUser = inngest.createFunction(
   { id: "add-user-from-clerk" },
@@ -30,10 +32,19 @@ export const addUser = inngest.createFunction(
       email: primaryEmail!.email_address,
     });
 
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{ price: process.env.STRIPE_FREE_PRICE_ID! }],
+    });
+
+    const periodEnd = subscription.items.data[0]!.current_period_end;
+    const periodEndDate = new Date(periodEnd * 1_000);
+
     await db.insert(users).values({
       clerkId: id,
       email: primaryEmail!.email_address,
       stripeId: customer.id,
+      subscriptionPeriodEnd: periodEndDate,
     });
   },
 );
@@ -82,8 +93,6 @@ export const deleteUser = inngest.createFunction(
       .where(eq(users.clerkId, clerkId));
 
     const foundUser = foundUsers[0]!;
-
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
     await stripe.customers.del(foundUser.stripeId); //automatically cancels any subscription
 

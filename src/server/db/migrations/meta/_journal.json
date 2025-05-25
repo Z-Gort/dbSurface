@@ -127,6 +127,20 @@
       "when": 1748206397144,
       "tag": "0017_left_frightful_four",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1748207592659,
+      "tag": "0018_lush_wolfpack",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1748207609132,
+      "tag": "0019_classy_forge",
+      "breakpoints": true
     }
   ]
 }

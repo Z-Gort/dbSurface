@@ -5,7 +5,11 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
 import { deleteBucketFolder } from "../dbUtils";
-import { invoicePaidSchema, stripeHookEnvelope, subscriptionSchema } from "./zodSchemas";
+import {
+  invoicePaidSchema,
+  stripeHookEnvelope,
+  subscriptionSchema,
+} from "./inngestZodSchemas";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -34,6 +38,12 @@ export const subscriptionCreated = inngest.createFunction(
     }
     const sub = payloadParsed.data.data.object;
     const customerId = sub.customer;
+    const priceId = sub.items.data[0].price.id;
+
+    if (priceId === process.env.STRIPE_FREE_PRICE_ID) {
+      //this event was triggered by automatic creation of free plan on user creation
+      return;
+    }
 
     await db
       .update(users)
@@ -65,6 +75,12 @@ export const subscriptionDeleted = inngest.createFunction(
     }
     const sub = payloadParsed.data.data.object;
     const customerId = sub.customer;
+    const priceId = sub.items.data[0].price.id;
+
+    if (priceId === process.env.STRIPE_FREE_PRICE_ID) {
+      //this event was triggered by automatic creation of free plan on user creation
+      return;
+    }
 
     await db
       .update(users)
@@ -132,7 +148,11 @@ export const invoicePaid = inngest.createFunction(
 
     await db
       .update(users)
-      .set({ subscriptionPeriodEnd: periodEndDate, monthlyProjectedRows: 0, monthlyProjections: 0 })
+      .set({
+        subscriptionPeriodEnd: periodEndDate,
+        monthlyProjectedRows: 0,
+        monthlyProjections: 0,
+      })
       .where(eq(users.stripeId, customerId));
   },
 );
