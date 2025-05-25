@@ -7,10 +7,8 @@ import { NonRetriableError } from "inngest";
 
 const subscriptionPayload = z.object({
   data: z.object({
-    data: z.object({
-      object: z.object({
-        customer: z.string(),
-      }),
+    object: z.object({
+      customer: z.string(),
     }),
   }),
 });
@@ -29,30 +27,25 @@ export const subscriptionCreated = inngest.createFunction(
   { id: "stripe-customer-subscription-created" },
   { event: "stripe/customer.subscription.created" },
   async ({ event }) => {
-    console.log("event", event);
     const envParsed = stripeHookEnvelope.safeParse(event.data);
     if (!envParsed.success) {
       throw new NonRetriableError("Malformed Inngest envelope");
     }
     const { raw, sig } = envParsed.data;
-    console.log("raw", raw, "sig", sig, "endpoint secret", endpointSecret);
-    let stripeEvent: Stripe.Event;
+
+    let stripeEvent;
     try {
-      stripeEvent = stripe.webhooks.constructEvent(
-        raw,
-        sig,
-        endpointSecret,
-      );
+      stripeEvent = stripe.webhooks.constructEvent(raw, sig, endpointSecret);
     } catch {
       throw new NonRetriableError("Invalid Stripe signature");
     }
 
+    console.log("stripeEvent", stripeEvent);
     const payloadParsed = subscriptionPayload.safeParse(stripeEvent);
     if (!payloadParsed.success) {
-      // Rare: Stripe changed the shape and your schema is stale
       throw new NonRetriableError("Unexpected Stripe payload shape");
     }
-    const sub = payloadParsed.data.data.data.object;
+    const sub = payloadParsed.data.data.object;
     const customerId = sub.customer;
 
     await db
@@ -83,7 +76,7 @@ export const subscriptionDeleted = inngest.createFunction(
     if (!payloadParsed.success) {
       throw new NonRetriableError("Unexpected Stripe payload shape");
     }
-    const sub = payloadParsed.data.data.data.object;
+    const sub = payloadParsed.data.data.object;
     const customerId = sub.customer;
 
     await db
