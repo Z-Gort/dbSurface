@@ -107,6 +107,10 @@ export const deleteUser = inngest.createFunction(
 
     const foundUser = foundUsers[0]!;
 
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+    await stripe.customers.del(foundUser.stripeId); //automatically cancels any subscription
+
     const userDatabases = await db
       .select()
       .from(databases)

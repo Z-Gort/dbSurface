@@ -88,6 +88,10 @@ export const subscriptionDeleted = inngest.createFunction(
       .select()
       .from(users)
       .where(eq(users.stripeId, customerId));
+    
+    if (foundUsers.length === 0) {
+      return; //this event must have been triggered by a customer deletion
+    }
 
     const foundUser = foundUsers[0]!;
 
