@@ -161,22 +161,16 @@ export const databasesRouter = router({
         console.log("getactivedb error", error);
       }
     }),
-  getActiveDb: protectedProcedure.query(
-    async ({ ctx }): Promise<string | null> => {
-      const { userId } = ctx.auth;
-      try {
-        // Fetch the user record with a non-null activeDb value.
-        const result = await db
-          .select()
-          .from(users)
-          .where(and(eq(users.clerkId, userId), isNotNull(users.activeDb)));
-        return result[0]?.activeDb ?? null;
-      } catch (error) {
-        console.log("getactivedb error", error, error.message);
-      }
-      return "pol";
-    },
-  ),
+  getActiveDb: protectedProcedure.query(async ({ ctx }) => {
+    const { userId } = ctx.auth;
+
+    const result = await db
+      .select()
+      .from(users)
+      .where(and(eq(users.clerkId, userId), isNotNull(users.activeDb)));
+      
+    return result[0]?.activeDb ?? null;
+  }),
   getDbRow: protectedProcedure
     .input(
       z.object({

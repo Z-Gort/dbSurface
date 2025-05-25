@@ -1,9 +1,10 @@
 import { eq } from "drizzle-orm";
-import { db, users } from "../db";
+import { databases, db, projections, users } from "../db";
 import { inngest } from "./client";
 import { z } from "zod";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
+import { deleteBucketFolder } from "../dbUtils";
 
 const subscriptionPayload = z.object({
   data: z.object({
@@ -82,5 +83,29 @@ export const subscriptionDeleted = inngest.createFunction(
       .update(users)
       .set({ plan: "free" })
       .where(eq(users.stripeId, customerId));
+
+    const foundUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.stripeId, customerId));
+
+    const foundUser = foundUsers[0]!;
+
+    const userDatabases = await db
+      .select()
+      .from(databases)
+      .where(eq(databases.userId, foundUser.userId));
+
+    for (const database of userDatabases) {
+      const dbProjections = await db
+        .select()
+        .from(projections)
+        .where(eq(projections.databaseId, database.databaseId));
+
+      for (const proj of dbProjections) {
+        const projectionId = proj.projectionId;
+        await deleteBucketFolder("quadtree-tiles", projectionId);
+      }
+    }
   },
 );

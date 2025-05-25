@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -8,20 +10,17 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { trpc } from "~/lib/client";
 import { useTabContext } from "../TabContext";
-import { useSidebar } from "../ui/sidebar";
-import { ChevronDown } from "lucide-react";
-import { Skeleton } from "../ui/skeleton";
-import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialogTitle
 } from "../ui/alert-dialog";
+import { useSidebar } from "../ui/sidebar";
+import { Skeleton } from "../ui/skeleton";
 
 export function ProjectionsDropdown() {
   const { setTab, tab } = useTabContext();
@@ -57,7 +56,7 @@ export function ProjectionsDropdown() {
         <DropdownMenuContent className="max-h-64 w-60 overflow-y-auto">
           <DropdownMenuGroup>
             {isActiveDbLoading ||
-            listProjectionsLoading ||
+            (listProjectionsLoading && activeDbId) ||
             (!deckglLoaded && projecting) ||
             projectionLoading ? (
               <>
@@ -172,7 +171,7 @@ export function ProjectionsDropdown() {
             <AlertDialogTitle>Error Opening Projection</AlertDialogTitle>
             <AlertDialogDescription>
               {
-                "Check your local connection is valid and healthy."
+                "Check your local connection is valid and healthy or make sure you have a database selected."
               }
             </AlertDialogDescription>
           </AlertDialogHeader>
