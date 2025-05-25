@@ -1,10 +1,9 @@
 import { eq } from "drizzle-orm";
-import { databases, db, projections, users } from "../db";
-import { inngest } from "./client";
-import { z } from "zod";
-import Stripe from "stripe";
 import { NonRetriableError } from "inngest";
+import Stripe from "stripe";
+import { databases, db, projections, users } from "../db";
 import { deleteBucketFolder } from "../dbUtils";
+import { inngest } from "./client";
 import {
   invoicePaidSchema,
   stripeHookEnvelope,
@@ -39,15 +38,11 @@ export const subscriptionCreated = inngest.createFunction(
     const sub = payloadParsed.data.data.object;
     const customerId = sub.customer;
     const priceId = sub.items.data[0].price.id;
-
-    if (priceId === process.env.STRIPE_FREE_PRICE_ID) {
-      //this event was triggered by automatic creation of free plan on user creation
-      return;
-    }
+    const tier = priceId === process.env.STRIPE_FREE_PRICE_ID ? "free" : "pro";
 
     await db
       .update(users)
-      .set({ plan: "pro" })
+      .set({ plan: tier })
       .where(eq(users.stripeId, customerId));
   },
 );
@@ -78,7 +73,7 @@ export const subscriptionDeleted = inngest.createFunction(
     const priceId = sub.items.data[0].price.id;
 
     if (priceId === process.env.STRIPE_FREE_PRICE_ID) {
-      //this event was triggered by automatic creation of free plan on user creation
+      //clerk user deleted handles cleanup
       return;
     }
 

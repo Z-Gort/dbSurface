@@ -65,7 +65,7 @@ export function PricingSection() {
             if (currentPlan === "pro") {
               customerPortal.mutate();
             } else {
-              checkout.mutate();
+              customerPortal.mutate();
             }
           }}
           loading={
