@@ -1,28 +1,37 @@
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { appRouter } from "~/server/trpc";
-import { createContext } from "~/server/trpc/context";
+// app/api/trpc/[trpc]/route.ts
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
+import { appRouter }           from '~/server/trpc';
+import { createContext }       from '~/server/trpc/context';
 
-const ALLOWED_ORIGIN = "http://localhost:4800";
+export const runtime = 'edge';                       // optional, but faster
 
-const cors = {
-  "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-  "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Credentials": "true",
-};
-
-export function OPTIONS() {
-  return new Response(null, { status: 204, headers: cors });
+/** Build CORS headers for this request */
+function cors(origin: string | null) {
+  return {
+    'Access-Control-Allow-Origin'      : origin ?? '',
+    'Access-Control-Allow-Methods'     : 'GET,POST,OPTIONS',
+    'Access-Control-Allow-Headers'     : 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials' : 'true',
+  } as const;
 }
 
+/* ----------  OPTIONS (pre‑flight)  ---------- */
+export function OPTIONS(req: Request) {
+  return new Response(null, {
+    status: 204,
+    headers: cors(req.headers.get('Origin')),
+  });
+}
+
+/* ----------  GET & POST (tRPC)  ---------- */
 const handler = (req: Request) =>
   fetchRequestHandler({
-    endpoint: "/api/trpc",
+    endpoint: '/api/trpc',
     req,
     router: appRouter,
     createContext,
     responseMeta() {
-      return { headers: cors };
+      return { headers: cors(req.headers.get('Origin')) };
     },
   });
 
