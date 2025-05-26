@@ -4,17 +4,14 @@ import { PlanCard } from "../Billing/PlanCard";
 
 export function PricingSection() {
   const router = useRouter();
-  const checkout = trpc.stripe.createCheckoutSession.useMutation({
-    onSuccess: ({ url }) => router.push(url!),
-  });
   const customerPortal = trpc.stripe.createCustomerPortal.useMutation({
     onSuccess: ({ url }) => router.push(url),
   });
-  const getCurrentPlan = trpc.stripe.getUserPlan.useQuery();
-  const currentPlan = getCurrentPlan.data;
+  const getUser = trpc.users.getUser.useQuery();
+  const currentPlan = getUser.isLoading ? undefined : getUser.data!.plan;
 
   function getButtonLabel(currentPlan: string | undefined) {
-    if (getCurrentPlan.isLoading) {
+    if (getUser.isLoading) {
       return "Loading...";
     }
     if (currentPlan === "pro") {
@@ -25,7 +22,7 @@ export function PricingSection() {
   }
 
   function getVariant(currentPlan: string | undefined) {
-    if (getCurrentPlan.isLoading) {
+    if (getUser.isLoading) {
       return "outline";
     }
     if (currentPlan === "pro") {
@@ -62,16 +59,11 @@ export function PricingSection() {
           variant={getVariant(currentPlan)}
           accent="primary"
           onClick={() => {
-            if (currentPlan === "pro") {
-              customerPortal.mutate();
-            } else {
-              customerPortal.mutate();
-            }
+            customerPortal.mutate();
           }}
           loading={
-            checkout.isLoading ||
             customerPortal.isLoading ||
-            getCurrentPlan.isLoading
+            getUser.isLoading
           }
         />
       </div>

@@ -62,8 +62,17 @@ export const subscriptionUpdated = inngest.createFunction(
       process.env.STRIPE_PRO_PRICE_ID!,
     );
 
-    if (tierSwitch !== "none") {
-      console.log("here");
+    if (tierSwitch === "free_to_pro") {
+      await db
+        .update(users)
+        .set({
+          plan: tier,
+          subscriptionPeriodEnd: periodEndDate
+        })
+        .where(eq(users.stripeId, customerId));
+    }
+
+    if (tierSwitch === "pro_to_free") {
       await db
         .update(users)
         .set({
@@ -73,9 +82,7 @@ export const subscriptionUpdated = inngest.createFunction(
           monthlyProjections: 0,
         })
         .where(eq(users.stripeId, customerId));
-    }
 
-    if (tierSwitch === "pro_to_free") {
       const foundUsers = await db
         .select()
         .from(users)
