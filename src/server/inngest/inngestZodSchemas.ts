@@ -8,14 +8,30 @@ export const subscriptionSchema = z.object({
         data: z
           .array(
             z.object({
-              price: z.object({
-                id: z.string(),
-              }),
+              price: z.object({ id: z.string() }),
+              current_period_end: z.number(),
+              current_period_start: z.number(),
             }),
           )
           .nonempty(),
       }),
     }),
+    previous_attributes: z
+      .object({
+        latest_invoice: z.string().optional(),
+        items: z
+          .object({
+            data: z.array(
+              z.object({
+                price: z.object({ id: z.string() }),
+                current_period_end: z.number(),
+                current_period_start: z.number(),
+              }),
+            ),
+          })
+          .optional(),
+      })
+      .optional(),
   }),
 });
 
@@ -64,3 +80,5 @@ export const ClerkDeleteSchema = z.object({
     id: z.string(),
   }),
 });
+
+export type TierSwitch = "free_to_pro" | "pro_to_free" | "none";
