@@ -203,6 +203,7 @@ export const subscriptionUpdated = inngest.createFunction(
     );
 
     console.log("tierSwitch", tierSwitch);
+    console.log("payload", payloadParsed.data);
 
     if (tierSwitch !== "none") {
       console.log("here")

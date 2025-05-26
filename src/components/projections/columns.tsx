@@ -30,7 +30,7 @@ export const getColumns = (): ColumnDef<Projection>[] => {
     },
     {
       accessorKey: "points",
-      header: "Vector Count",
+      header: "Rows",
     },
     {
       accessorKey: "status",

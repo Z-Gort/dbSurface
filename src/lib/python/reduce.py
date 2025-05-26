@@ -12,7 +12,7 @@ vol = modal.Volume.from_name("reduction-files", create_if_missing=True)
     .add_local_python_source("utils"),
     secrets=[modal.Secret.from_name("supabase-credentials")],
     volumes={MOUNT: vol},
-    timeout=7200,
+    timeout=7 * 60 * 60, #6 hours
 )
 def orchestrator(
     schema: str,
@@ -85,7 +85,7 @@ def orchestrator(
     .pip_install("psycopg[binary]", "pyarrow", "pgvector", "supabase")
     .add_local_python_source("utils"),
     volumes={MOUNT: vol},
-    timeout=7200,  # 2 hours (should not reach 2 hours though)
+    timeout=7 * 60 * 60,  # 6 hours
 )
 def fetch_table(
     shard_id: int,
@@ -125,7 +125,7 @@ def fetch_table(
     .add_local_python_source("utils"),
     secrets=[modal.Secret.from_name("supabase-credentials")],
     gpu="T4",
-    timeout=60 * 90,
+    timeout=4 * 60 * 60,
     volumes={MOUNT: vol},
 )
 def embed_to_2d(
@@ -185,7 +185,7 @@ def embed_to_2d(
         modal.Secret.from_name("cloudflare-credentials"),
     ],
     volumes={MOUNT: vol},
-    timeout=60 * 60,
+    timeout=7 *60 * 60,
 )
 def upload_tiles(
     run_dir: str, projection_id: str, vector_col: str, primary_key_col: str
