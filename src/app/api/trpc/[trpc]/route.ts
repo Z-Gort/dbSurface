@@ -27,6 +27,10 @@ const handler = (req: Request) =>
     responseMeta() {
       return { headers: cors(req.headers.get("Origin")) };
     },
+    onError({ path, error, type, req }) {
+      console.error('tRPC fail',
+        { type, path, code: error.code, message: error.message });
+    },
   });
 
 export { handler as GET, handler as POST };
