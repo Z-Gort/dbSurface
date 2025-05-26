@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 import { db, users } from "~/server/db";
-import { router } from "../../trpcLocal/trpcLocal";
+import { router } from "../trpc";
 import { protectedProcedure } from "../trpc";
 
 export const stripeRouter = router({
