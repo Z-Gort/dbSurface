@@ -1,36 +1,31 @@
-// app/api/trpc/[trpc]/route.ts
-import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter }           from '~/server/trpc';
-import { createContext }       from '~/server/trpc/context';
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { appRouter } from "~/server/trpc";
+import { createContext } from "~/server/trpc/context";
 
-
-/** Build CORS headers for this request */
 function cors(origin: string | null) {
   return {
-    'Access-Control-Allow-Origin'      : origin ?? '',
-    'Access-Control-Allow-Methods'     : 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers'     : 'Content-Type, Authorization',
-    'Access-Control-Allow-Credentials' : 'true',
+    "Access-Control-Allow-Origin": origin ?? "",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
   } as const;
 }
 
-/* ----------  OPTIONS (pre‑flight)  ---------- */
 export function OPTIONS(req: Request) {
   return new Response(null, {
     status: 204,
-    headers: cors(req.headers.get('Origin')),
+    headers: cors(req.headers.get("Origin")),
   });
 }
 
-/* ----------  GET & POST (tRPC)  ---------- */
 const handler = (req: Request) =>
   fetchRequestHandler({
-    endpoint: '/api/trpc',
+    endpoint: "/api/trpc",
     req,
     router: appRouter,
     createContext,
     responseMeta() {
-      return { headers: cors(req.headers.get('Origin')) };
+      return { headers: cors(req.headers.get("Origin")) };
     },
   });
 
