@@ -1,7 +1,7 @@
 import { serve } from "inngest/next";
-import { inngest } from "../../../server/inngest/client";
+import { subscriptionUpdated } from "~/server/inngest/stripeFunctions";
 import { addUser, deleteUser, updateUser } from "../../../server/inngest/clerkFunctions";
-import { invoicePaid, subscriptionCreated, subscriptionDeleted, subscriptionUpdated } from "~/server/inngest/stripeFunctions";
+import { inngest } from "../../../server/inngest/client";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
