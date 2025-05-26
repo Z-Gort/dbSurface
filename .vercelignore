@@ -9,3 +9,4 @@ src/lib
 src/miscellaneousTypes
 src/server/db/migrations
 src/server/trpcLocal
+src/middleware
