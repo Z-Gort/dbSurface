@@ -8,5 +8,4 @@ src/components
 src/lib
 src/miscellaneousTypes
 src/server/db/migrations
-src/server/db/schema
 src/server/trpcLocal
