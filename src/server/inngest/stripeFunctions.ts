@@ -202,7 +202,10 @@ export const subscriptionUpdated = inngest.createFunction(
       process.env.STRIPE_PRO_PRICE_ID!,
     );
 
+    console.log("tierSwitch", tierSwitch);
+
     if (tierSwitch !== "none") {
+      console.log("here")
       await db
         .update(users)
         .set({
