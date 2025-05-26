@@ -8,6 +8,5 @@ src/components
 src/hooks
 src/lib
 src/miscellaneousTypes
-src/middleware.ts
 src/server/db/migrations
 src/server/trpcLocal
