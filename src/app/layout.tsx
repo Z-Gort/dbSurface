@@ -1,5 +1,3 @@
-"use client";
-
 import { Inter } from "next/font/google";
 import TrpcProvider from "~/components/Providers";
 import { AppSidebar } from "~/components/sidebar/app-sidebar";

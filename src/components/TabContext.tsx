@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   createContext,
   useContext,
@@ -16,7 +18,7 @@ export type TabState = { //some of these fields are not strictly necessary witho
     Record<string, [number, number, number, number]>
   >;
   projectionPrimaryKey?: string;
-  deckglLoaded: boolean; //this is just used as a boolean now
+  deckglLoaded: boolean;
   timestampCols: MutableRefObject<Set<string>>;
   continuousBuckets: MutableRefObject<number[]>;
   currentHover: {
