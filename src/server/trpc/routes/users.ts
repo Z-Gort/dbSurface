@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { db, users } from "~/server/db";
 import { router } from "../trpc";
 import { protectedProcedure } from "../trpc";
+import { z } from "zod";
 
 export const usersRouter = router({
   remainingUsage: protectedProcedure.query(async ({ ctx }) => {
@@ -37,14 +38,41 @@ export const usersRouter = router({
 
     return { url: session.url };
   }),
-  getUser: protectedProcedure.query(async ({ ctx }) => {
+  createCheckoutSession: protectedProcedure.mutation(async ({ ctx }) => {
     const { userId: clerkId } = ctx.auth;
 
-    const result = await db
-      .select()
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+    const stripeResult = await db
+      .select({ stripeId: users.stripeId })
       .from(users)
       .where(eq(users.clerkId, clerkId));
 
-    return result[0]!;
+    const stripeId = stripeResult[0]!.stripeId;
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      customer: stripeId,
+      line_items: [
+        {
+          price: process.env.STRIPE_PRO_PRICE_ID!,
+          quantity: 1,
+        },
+      ],
+      success_url: "http://localhost:4800/billing",
+      cancel_url: "http://localhost:4800/billing",
+    });
+
+    return { url: session.url };
+  }),
+  getUserPlan: protectedProcedure.query(async ({ ctx }) => {
+    const { userId: clerkId } = ctx.auth;
+
+    const stripeResult = await db
+      .select({ plan: users.plan })
+      .from(users)
+      .where(eq(users.clerkId, clerkId));
+
+    return stripeResult[0]!.plan;
   }),
 });
