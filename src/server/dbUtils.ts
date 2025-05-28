@@ -4,11 +4,11 @@ import { eq } from "drizzle-orm";
 import { r2 } from "~/server/db/r2Client";
 import { ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 
-export async function getUserIdByClerkId(clerkId: string): Promise<string> {
+export async function getUserIdByKindeId(kindeId: string): Promise<string> {
   const userRes = await db
     .select({ userId: users.userId })
     .from(users)
-    .where(eq(users.clerkId, clerkId))
+    .where(eq(users.kindeId, kindeId))
     .execute();
 
   return userRes[0]!.userId;

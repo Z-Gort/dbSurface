@@ -7,7 +7,7 @@ import { z } from "zod";
 import { db } from "~/server/db";
 import { r2 } from "~/server/db/r2Client";
 import { databases, projections, users } from "~/server/db/schema";
-import { deleteBucketFolder, getUserIdByClerkId } from "~/server/dbUtils";
+import { deleteBucketFolder, getUserIdByKindeId } from "~/server/dbUtils";
 import { testRemoteConnection } from "~/server/trpc/remoteConnectionUtils";
 import { protectedProcedure, router } from "../trpc";
 
@@ -45,8 +45,8 @@ export const databasesRouter = router({
           databaseId: input.databaseId,
         };
       } else {
-        const { userId: clerkId } = ctx.auth;
-        const userId = await getUserIdByClerkId(clerkId);
+        const { id: kindeId } = ctx.auth;
+        const userId = await getUserIdByKindeId(kindeId);
 
         const result = await db
           .insert(databases)
@@ -68,8 +68,8 @@ export const databasesRouter = router({
       }
     }),
   listUserDatabases: protectedProcedure.query(async ({ ctx }) => {
-    const { userId: clerkId } = ctx.auth;
-    const userId = await getUserIdByClerkId(clerkId);
+    const { id: kindeId } = ctx.auth;
+    const userId = await getUserIdByKindeId(kindeId);
 
     const results = await db
       .select({
@@ -149,26 +149,26 @@ export const databasesRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.auth;
+      const { id: kindeId } = ctx.auth;
       try {
         await db
           .update(users)
           .set({
             activeDb: input.databaseId,
           })
-          .where(eq(users.clerkId, userId));
+          .where(eq(users.kindeId, kindeId));
       } catch (error) {
         console.log("getactivedb error", error);
       }
     }),
   getActiveDb: protectedProcedure.query(async ({ ctx }) => {
-    const { userId } = ctx.auth;
+    const { id: kindeId } = ctx.auth;
 
     const result = await db
       .select()
       .from(users)
-      .where(and(eq(users.clerkId, userId), isNotNull(users.activeDb)));
-      
+      .where(and(eq(users.kindeId, kindeId), isNotNull(users.activeDb)));
+
     return result[0]?.activeDb ?? null;
   }),
   getDbRow: protectedProcedure

@@ -1,7 +1,8 @@
-import { auth } from '@clerk/nextjs/server'
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export const createContext = async () => {
-  return { auth: await auth() }
-}
+  const { getUser } = getKindeServerSession();
+  return { user: await getUser() };
+};
 
-export type Context = Awaited<ReturnType<typeof createContext>>
+export type Context = Awaited<ReturnType<typeof createContext>>;

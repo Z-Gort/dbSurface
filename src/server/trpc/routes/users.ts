@@ -6,9 +6,12 @@ import { protectedProcedure } from "../trpc";
 
 export const usersRouter = router({
   remainingUsage: protectedProcedure.query(async ({ ctx }) => {
-    const { userId: clerkId } = ctx.auth;
+    const { id: kindeId } = ctx.auth;
 
-    const user = await db.select().from(users).where(eq(users.clerkId, clerkId));
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.kindeId, kindeId));
     const usedRows = user[0]!.monthlyProjectedRows;
     const usedProjections = user[0]!.monthlyProjections;
     const totalRows = user[0]!.plan === "free" ? 250_000 : 40_000_000;
@@ -19,12 +22,12 @@ export const usersRouter = router({
     return { remainingRows, remainingProjections };
   }),
   createCustomerPortal: protectedProcedure.mutation(async ({ ctx }) => {
-    const { userId: clerkId } = ctx.auth;
+    const { id: kindeId } = ctx.auth;
 
     const stripeResult = await db
       .select({ stripeId: users.stripeId })
       .from(users)
-      .where(eq(users.clerkId, clerkId));
+      .where(eq(users.kindeId, kindeId));
 
     const stripeId = stripeResult[0]!.stripeId;
 
@@ -38,12 +41,12 @@ export const usersRouter = router({
     return { url: session.url };
   }),
   getUser: protectedProcedure.query(async ({ ctx }) => {
-    const { userId: clerkId } = ctx.auth;
+    const { id: kindeId } = ctx.auth;
 
     const result = await db
       .select()
       .from(users)
-      .where(eq(users.clerkId, clerkId));
+      .where(eq(users.kindeId, kindeId));
 
     return result[0]!;
   }),

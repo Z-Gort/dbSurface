@@ -6,12 +6,12 @@ import { protectedProcedure } from "../trpc";
 
 export const stripeRouter = router({
   createCustomerPortal: protectedProcedure.mutation(async ({ ctx }) => {
-    const { userId: clerkId } = ctx.auth;
+    const { id: kindeId } = ctx.auth;
 
     const stripeResult = await db
       .select({ stripeId: users.stripeId })
       .from(users)
-      .where(eq(users.clerkId, clerkId));
+      .where(eq(users.kindeId, kindeId));
 
     const stripeId = stripeResult[0]!.stripeId;
 
@@ -23,5 +23,5 @@ export const stripeRouter = router({
     });
 
     return { url: session.url };
-  })
+  }),
 });

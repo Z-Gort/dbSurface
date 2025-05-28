@@ -17,7 +17,7 @@ export const users = pgTable("users", {
       onDelete: "set null",
     },
   ),
-  clerkId: text("clerk_id").unique().notNull(),
+  kindeId: text("kinde_id").unique().notNull(),
   stripeId: text("stripe_id").unique().notNull(),
   plan: text("plan").notNull().default("free"),
   monthlyProjectedRows: integer("monthly_projected_rows").notNull().default(0),

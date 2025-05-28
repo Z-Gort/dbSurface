@@ -71,7 +71,7 @@ export const projectionsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { userId } = ctx.auth;
+      const { id : kindeId } = ctx.auth;
       const {
         databaseId,
         schema,
@@ -90,7 +90,7 @@ export const projectionsRouter = router({
           monthlyProjections: sql`${users.monthlyProjections} + 1`,
           monthlyProjectedRows: sql`${users.monthlyProjectedRows} + ${numberPoints}`,
         })
-        .where(eq(users.clerkId, userId));
+        .where(eq(users.kindeId, kindeId));
 
       const [insertedProjection] = await db
         .insert(projections)
