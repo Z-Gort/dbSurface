@@ -162,8 +162,6 @@ export const databasesRouter = router({
       }
     }),
   getActiveDb: protectedProcedure.query(async ({ ctx }) => {
-    console.log("getactivedb");
-    try{
     const { userId } = ctx.auth;
 
     const result = await db
@@ -172,10 +170,6 @@ export const databasesRouter = router({
       .where(and(eq(users.clerkId, userId), isNotNull(users.activeDb)));
       
     return result[0]?.activeDb ?? null;
-    } catch (error) {
-      console.log("getactivedb error", error);
-      return null;
-    }
   }),
   getDbRow: protectedProcedure
     .input(

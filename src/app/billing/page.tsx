@@ -1,23 +1,24 @@
 "use client";
 
-import { trpc } from "~/lib/client";
-import { Button } from "~/components/ui/button";
 import { PricingSection } from "~/components/Billing/PricingSection";
+import { Usage } from "~/components/Billing/Usage";
+import { Separator } from "~/components/ui/separator";
 import "~/styles/globals.css";
 
 export default function Billing() {
-  const createCustomerPortal = trpc.stripe.createCustomerPortal.useMutation({
-    onSuccess: ({ url }) => {
-      window.location.assign(url);
-    },
-  });
-
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-8">
-      <Button variant="outline" onClick={() => createCustomerPortal.mutate()}>
-        Manage Subscription
-      </Button>
-      <PricingSection />
+    <div className="flex w-full flex-col px-10 py-10">
+      {/* Usage section — now stretches to the full 4 xl max width */}
+      <div className="mb-10 w-full max-w-4xl mx-auto">  {/* <- changed */}
+        <Usage />
+      </div>
+
+      <Separator className="my-2 w-full" />
+
+      {/* Pricing cards keep the narrower look */}
+      <div className="w-full max-w-xl mx-auto">
+        <PricingSection />
+      </div>
     </div>
   );
 }

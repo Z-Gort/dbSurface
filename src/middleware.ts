@@ -1,35 +1,13 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-function cors(origin: string | null): HeadersInit {
-  return {
-    "Access-Control-Allow-Origin": origin ?? "",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": "true",
-  };
-}
-
 export default clerkMiddleware(async (auth, request) => {
-  const { pathname } = request.nextUrl;
-  const origin = request.headers.get("origin");
+   const { pathname } = request.nextUrl;
 
-  //if browser's pre-flight always pass
-  if (request.method === "OPTIONS") {
-    return NextResponse.next({ headers: cors(origin) });
-  }
-
-  //let pass to inngest
   if (pathname === "/api/inngest" || pathname.startsWith("/api/inngest/")) {
     return NextResponse.next();
   }
-
-  //tRPC calls: skip auth, add CORS
-  if (pathname.startsWith("/api/trpc")) {
-    return NextResponse.next({ headers: cors(origin) });
-  }
-
-  //everything else protect
+  
   await auth.protect();
 });
 

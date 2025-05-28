@@ -1,36 +1,13 @@
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { appRouter } from "~/server/trpc";
-import { createContext } from "~/server/trpc/context";
-
-function cors(origin: string | null) {
-  return {
-    "Access-Control-Allow-Origin": origin ?? "",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Credentials": "true",
-  } as const;
-}
-
-export function OPTIONS(req: Request) {
-  return new Response(null, {
-    status: 204,
-    headers: cors(req.headers.get("Origin")),
-  });
-}
+import { appRouter } from '~/server/trpc';
+import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
+import { createContext } from '~/server/trpc/context';
 
 const handler = (req: Request) =>
   fetchRequestHandler({
-    endpoint: "/api/trpc",
+    endpoint: '/api/trpc',
     req,
     router: appRouter,
-    createContext,
-    responseMeta() {
-      return { headers: cors(req.headers.get("Origin")) };
-    },
-    onError({ path, error, type, req }) {
-      console.error('tRPC fail',
-        { type, path, code: error.code, message: error.message });
-    },
+    createContext
   });
 
 export { handler as GET, handler as POST };

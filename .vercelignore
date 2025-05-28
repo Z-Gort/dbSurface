@@ -1,3 +1,4 @@
+src/app/api/trpc
 src/app/api/trpcLocal
 src/app/databases
 src/app/projections
@@ -5,7 +6,10 @@ src/app/layout.tsx
 src/app/page.tsx
 src/app/billing
 src/components
+src/hooks
 src/lib
 src/miscellaneousTypes
+src/middleware.ts
 src/server/db/migrations
+src/server/trpc
 src/server/trpcLocal
