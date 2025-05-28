@@ -1,6 +1,5 @@
-import { useClerk } from "@clerk/nextjs";
 import type { Monaco } from "@monaco-editor/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map from "~/components/map/Map";
 import {
   ResizableHandle,
@@ -8,17 +7,34 @@ import {
   ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { useTabContext } from "../providers/TabContext";
+import { Skeleton } from "../ui/skeleton";
 import { EditorToolbar } from "./EditorToolbar";
 import { LowerPanel } from "./LowerPanel";
 import { SqlEditor } from "./SQLEditor";
 import { useAddDefinitions } from "./useAddDefinitions";
-import { Skeleton } from "../ui/skeleton";
 
 export function ThreePanels() {
   const { tab } = useTabContext();
   const { panelCoords, projecting } = tab;
+  const [hasMounted, setHasMounted] = useState(false);
   const monacoRef = useRef<Monaco | null>(null);
   useAddDefinitions(monacoRef.current);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+  if (!hasMounted) {
+    return (
+      <div className="relative h-screen w-full">
+        <div className="absolute left-0 top-2 w-full">
+          <Skeleton className="h-8 w-full" />
+        </div>
+        <div className="absolute left-0 top-1/2 w-full">
+          <Skeleton className="h-8 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -47,12 +63,10 @@ export function ThreePanels() {
                   panelCoords.current.vertical = size;
                 }}
               >
-                (
                 <>
                   <EditorToolbar />
                   <SqlEditor monacoRef={monacoRef} />
                 </>
-                )
               </ResizablePanel>
               <ResizableHandle />
               <ResizablePanel minSize={5}>
@@ -82,12 +96,10 @@ export function ThreePanels() {
               panelCoords.current.vertical = size;
             }}
           >
-            (
             <>
               <EditorToolbar />
               <SqlEditor monacoRef={monacoRef} />
             </>
-            )
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel minSize={5}>

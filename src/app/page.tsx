@@ -21,23 +21,20 @@ const Page = () => {
         const activeDb = await trpcContext.client.databases.getDbRow.query({
           databaseId: activeDbId,
         });
-        try {
-          await setLocalConnection.mutateAsync({
-            dbHost: activeDb!.dbHost,
-            dbPort: activeDb!.dbPort,
-            dbName: activeDb!.dbName,
-            user: activeDb!.localDbUser,
-            password: activeDb!.localDbPassword,
-          });
-        } catch (error) {
-          console.log("error", error);
-        }
+
+        await setLocalConnection.mutateAsync({
+          dbHost: activeDb!.dbHost,
+          dbPort: activeDb!.dbPort,
+          dbName: activeDb!.dbName,
+          user: activeDb!.localDbUser,
+          password: activeDb!.localDbPassword,
+        });
       }
     }
     void initConnection();
   }, []);
 
-  return <ThreePanels />;
+  return <ThreePanels/>;
 };
 
 export default Page;
