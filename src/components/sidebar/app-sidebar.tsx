@@ -1,18 +1,16 @@
 "use client";
 
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import { Code, Database, Eye, CreditCard } from "lucide-react";
+import { Code, CreditCard, Database, Eye } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
+  SidebarMenuItem
 } from "~/components/ui/sidebar";
 
 // Menu items.
@@ -68,13 +66,6 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarFooter>
-          <SignedIn>
-            <div className="mt-1 ml-1">
-              <UserButton></UserButton>
-            </div>
-          </SignedIn>
-        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   );

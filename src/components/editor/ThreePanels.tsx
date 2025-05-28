@@ -17,22 +17,8 @@ import { Skeleton } from "../ui/skeleton";
 export function ThreePanels() {
   const { tab } = useTabContext();
   const { panelCoords, projecting } = tab;
-  const clerk = useClerk();
   const monacoRef = useRef<Monaco | null>(null);
   useAddDefinitions(monacoRef.current);
-
-  if (!clerk.loaded) {
-    return (
-      <div className="relative h-screen w-full">
-        <div className="absolute left-0 top-2 w-full">
-          <Skeleton className="h-8 w-full" />
-        </div>
-        <div className="absolute left-0 top-1/2 w-full">
-          <Skeleton className="h-8 w-full" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -61,12 +47,12 @@ export function ThreePanels() {
                   panelCoords.current.vertical = size;
                 }}
               >
-                {clerk.loaded && (
-                  <>
-                    <EditorToolbar />
-                    <SqlEditor monacoRef={monacoRef} />
-                  </>
-                )}
+                (
+                <>
+                  <EditorToolbar />
+                  <SqlEditor monacoRef={monacoRef} />
+                </>
+                )
               </ResizablePanel>
               <ResizableHandle />
               <ResizablePanel minSize={5}>
@@ -96,12 +82,12 @@ export function ThreePanels() {
               panelCoords.current.vertical = size;
             }}
           >
-            {clerk.loaded && (
-              <>
-                <EditorToolbar />
-                <SqlEditor monacoRef={monacoRef} />
-              </>
-            )}
+            (
+            <>
+              <EditorToolbar />
+              <SqlEditor monacoRef={monacoRef} />
+            </>
+            )
           </ResizablePanel>
           <ResizableHandle />
           <ResizablePanel minSize={5}>

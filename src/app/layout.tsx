@@ -1,9 +1,8 @@
 "use client";
 
-import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
-import { AppSidebar } from "~/components/sidebar/app-sidebar";
 import TrpcProvider from "~/components/Providers";
+import { AppSidebar } from "~/components/sidebar/app-sidebar";
 import { TabProvider } from "~/components/TabContext";
 import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar";
 import { Toaster } from "~/components/ui/toaster";
@@ -17,15 +16,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider
-      appearance={{
-        elements: {
-          userButtonPopoverRootBox: {
-            pointerEvents: "auto", //when sidebar is closed, make sure clicks go through
-          },
-        },
-      }}
-    >
       <html lang="en" className="h-full">
         <body
           className={cn(
@@ -45,6 +35,5 @@ export default function RootLayout({
           </TrpcProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
 }
