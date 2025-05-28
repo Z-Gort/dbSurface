@@ -8,7 +8,7 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.next();
   }
   
-  await auth.protect();
+   await auth.protect();
 });
 
 export const config = {

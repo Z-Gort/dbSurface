@@ -1,6 +1,6 @@
 import { Progress } from "~/components/ui/progress";
 import { trpc } from "~/lib/client";
-import { format } from "date-fns";            // tiny helper to pretty‑print dates
+import { format } from "date-fns";
 
 export function Usage() {
   const { data: currentPlan } = trpc.users.getUser.useQuery();
@@ -8,25 +8,22 @@ export function Usage() {
 
   const ready = !!currentPlan && !!remainingUsage;
 
-  /* ---------- tier limits ---------- */
   const rowsLimit = currentPlan?.plan === "pro" ? 40_000_000 : 250_000;
   const projLimit = currentPlan?.plan === "pro" ? 200 : 10;
 
-  /* ---------- numbers (0 while loading → keeps animation) ---------- */
   const rowsUsed = ready ? rowsLimit - remainingUsage.remainingRows : 0;
   const projUsed = ready ? projLimit - remainingUsage.remainingProjections : 0;
 
   const rowsPct = ready ? (rowsUsed / rowsLimit) * 100 : 0;
   const projPct = ready ? (projUsed / projLimit) * 100 : 0;
 
-  /* ---------- next reset date ---------- */
   const resetLabel =
     ready && currentPlan.subscriptionPeriodEnd
       ? `Usage resets on ${format(
           currentPlan.subscriptionPeriodEnd,
           "MMM d, yyyy",
         )}`
-      : null;
+      : "Usage resets on...";
 
   return (
     <div className="space-y-4">
@@ -34,7 +31,6 @@ export function Usage() {
         <p className="text-sm font-medium text-muted-foreground">{resetLabel}</p>
       )}
 
-      {/* rows bar */}
       <div>
         <div className="mb-1 flex items-center justify-between text-sm font-medium">
           <span>Rows used</span>
@@ -47,7 +43,6 @@ export function Usage() {
         <Progress value={rowsPct} />
       </div>
 
-      {/* projections bar */}
       <div>
         <div className="mb-1 flex items-center justify-between text-sm font-medium">
           <span>Projections used</span>
