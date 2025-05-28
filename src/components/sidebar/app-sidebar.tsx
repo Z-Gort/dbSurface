@@ -1,7 +1,11 @@
 "use client";
 
-import { SignedIn, UserButton } from "@clerk/nextjs";
-import { Code, Database, Eye, CreditCard } from "lucide-react";
+import {
+  LoginLink,
+  LogoutLink,
+  RegisterLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
+import { Code, CreditCard, Database, Eye } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -14,11 +18,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
+import { UserAvatar } from "./UserAvatar";
 
 // Menu items.
 const items = [
@@ -74,6 +74,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarFooter>
+          <div className="mt-4">
+          <UserAvatar/>
+          </div>
           <LoginLink>Sign in</LoginLink>
           <RegisterLink>Sign up</RegisterLink>
           <LogoutLink>Log out</LogoutLink>

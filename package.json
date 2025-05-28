@@ -30,6 +30,7 @@
     "@loaders.gl/core": "^4.3.3",
     "@monaco-editor/react": "^4.6.0",
     "@radix-ui/react-alert-dialog": "^1.1.6",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-collapsible": "^1.1.8",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-dropdown-menu": "^2.1.6",
