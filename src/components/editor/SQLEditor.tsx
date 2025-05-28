@@ -1,6 +1,6 @@
 import Editor, { type Monaco, type OnMount } from "@monaco-editor/react";
 import { type MutableRefObject } from "react";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 
 export function SqlEditor({
   monacoRef,
@@ -11,8 +11,10 @@ export function SqlEditor({
   const { projecting } = tab;
 
   const showLineNumbers = projecting ? "off" : "on";
-  const placeHolder = projecting ? `Filter points by PK query
-e.g. SELECT id FROM table WHERE rating >= 3` : "";
+  const placeHolder = projecting
+    ? `Filter points by PK query
+e.g. SELECT id FROM table WHERE rating >= 3`
+    : "";
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {

@@ -11,7 +11,7 @@ import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import { MutableRefObject, SetStateAction, useEffect, useState } from "react";
 import { trpc } from "~/lib/client";
-import { TabState } from "../TabContext";
+import { TabState } from "../providers/TabContext";
 
 export function hash32(val: string | number): number {
   const hex = md5.hash(String(val)) as string;
@@ -498,10 +498,11 @@ export async function loadAllSignedUrls(
     (tileId) => `${projectionId}/tiles/${tileId}.arrow.zst`,
   );
 
-  const signedTileUrls = (await trpcContext.client.databases.createSignedUrls.mutate({
-    remotePaths: tileRemotePaths,
-    bucket: "quadtree-tiles",
-  })) as { path: string; signedUrl: string }[];
+  const signedTileUrls =
+    (await trpcContext.client.databases.createSignedUrls.mutate({
+      remotePaths: tileRemotePaths,
+      bucket: "quadtree-tiles",
+    })) as { path: string; signedUrl: string }[];
 
   if (!signedTileUrls?.[0]) {
     console.error("No tile urls found");

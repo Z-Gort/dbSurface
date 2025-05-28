@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent } from "~/components/ui/card";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 
 function humanizeKey(raw: string) {
   const noPrefix = raw.replace(/^user_/, "");
@@ -21,7 +21,7 @@ export function HoverData() {
   const data = currentHover.data as Record<string, any>;
 
   return (
-    <Card className="mr-4 mt-2 w-fit max-w-full max-h-full overflow-y-auto">
+    <Card className="mr-4 mt-2 max-h-full w-fit max-w-full overflow-y-auto">
       <CardContent className="space-y-2 p-2">
         <ul className="m-0 list-none space-y-1 p-0">
           {Object.entries(data).map(([rawKey, rawValue]) => {
@@ -44,7 +44,10 @@ export function HoverData() {
                 <span className="font-mono text-xs font-semibold">
                   {humanizeKey(rawKey)}:
                 </span>
-                <span className="break-words font-mono text-xs" style={{ wordBreak: "break-all" }}>
+                <span
+                  className="break-words font-mono text-xs"
+                  style={{ wordBreak: "break-all" }}
+                >
                   {String(displayValue)}
                 </span>
               </li>

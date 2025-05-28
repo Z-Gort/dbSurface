@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import { getPrecision } from "~/lib/precisionUtils";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import { Button } from "../ui/button";
 import { ColorBy } from "./ColorBy";
 import { HoverData } from "./HoverData";

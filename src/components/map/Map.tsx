@@ -12,7 +12,7 @@ import {
   type Metadata,
   type TileSource,
 } from "~/miscellaneousTypes/types";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import { DECILE_COLORS, palette, queryColors } from "./Colors";
 import {
   flattenTiles,
@@ -176,9 +176,7 @@ export default function Map() {
           hashes,
           Number(metadata.tiles["0/0_0"].node_count),
         );
-        return hashes?.has(hash)
-          ? queriedMultiplier
-          : 0.5;
+        return hashes?.has(hash) ? queriedMultiplier : 0.5;
       },
       transitions: {
         getFillColor: 200,

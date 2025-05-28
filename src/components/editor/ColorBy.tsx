@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { trpc } from "~/lib/client";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import { Card, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { DECILE_COLORS } from "../map/Colors";

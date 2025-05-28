@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { trpc } from "~/lib/client";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,7 +17,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { useSidebar } from "../ui/sidebar";
 import { Skeleton } from "../ui/skeleton";

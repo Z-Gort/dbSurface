@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { DataGrid } from "react-data-grid";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import "react-data-grid/lib/styles.css";
 import "~/styles/globals.css";
 import AutoSizer from "react-virtualized-auto-sizer";

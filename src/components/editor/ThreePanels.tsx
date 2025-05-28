@@ -7,7 +7,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "~/components/ui/resizable";
-import { useTabContext } from "../TabContext";
+import { useTabContext } from "../providers/TabContext";
 import { EditorToolbar } from "./EditorToolbar";
 import { LowerPanel } from "./LowerPanel";
 import { SqlEditor } from "./SQLEditor";

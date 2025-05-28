@@ -17,6 +17,7 @@ import {
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 
 // Menu items.
@@ -75,6 +76,7 @@ export function AppSidebar() {
         <SidebarFooter>
           <LoginLink>Sign in</LoginLink>
           <RegisterLink>Sign up</RegisterLink>
+          <LogoutLink>Log out</LogoutLink>
         </SidebarFooter>
       </SidebarContent>
     </Sidebar>
