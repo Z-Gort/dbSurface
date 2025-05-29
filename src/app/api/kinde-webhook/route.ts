@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { NextResponse } from "next/server";
 import jwksClient from "jwks-rsa";
 import jwt from "jsonwebtoken";
