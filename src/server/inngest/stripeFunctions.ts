@@ -3,12 +3,12 @@ import { NonRetriableError } from "inngest";
 import Stripe from "stripe";
 import { type z } from "zod";
 import { databases, db, projections, users } from "../db";
-import { deleteBucketFolder } from "../dbUtils";
+import { deleteBucketFolder } from "../utils/dbUtils";
 import { inngest } from "./client";
 import {
   stripeHookEnvelope,
   subscriptionSchema,
-  type TierSwitch
+  type TierSwitch,
 } from "./inngestZodSchemas";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -67,7 +67,7 @@ export const subscriptionUpdated = inngest.createFunction(
         .update(users)
         .set({
           plan: tier,
-          subscriptionPeriodEnd: periodEndDate
+          subscriptionPeriodEnd: periodEndDate,
         })
         .where(eq(users.stripeId, customerId));
     }

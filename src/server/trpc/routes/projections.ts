@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm/expressions";
 import { z } from "zod";
-import { reduceColumn } from "~/server/callReduce";
+import { reduceColumn } from "~/server/utils/callReduce";
 import { db } from "~/server/db";
 import { projections, users } from "~/server/db/schema";
-import { deleteBucketFolder } from "~/server/dbUtils";
+import { deleteBucketFolder } from "~/server/utils/dbUtils";
 import { protectedProcedure, router } from "../trpc";
 import { sql, asc } from "drizzle-orm";
 
@@ -71,7 +71,7 @@ export const projectionsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { id : kindeId } = ctx.auth;
+      const { id: kindeId } = ctx.auth;
       const {
         databaseId,
         schema,
@@ -81,7 +81,7 @@ export const projectionsRouter = router({
         vectorColumn,
         displayName,
         trimmedCols,
-        remainingRows
+        remainingRows,
       } = input;
 
       await db
@@ -113,7 +113,7 @@ export const projectionsRouter = router({
         projectionId: insertedProjection!.projectionId,
         numberPoints,
         databaseId,
-        remainingRows
+        remainingRows,
       });
 
       return { projectionId: insertedProjection!.projectionId };

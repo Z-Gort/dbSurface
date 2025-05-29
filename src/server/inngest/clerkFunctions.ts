@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "~/server/db";
 import { databases, projections, users } from "~/server/db/schema";
-import { deleteBucketFolder } from "~/server/dbUtils";
+import { deleteBucketFolder } from "~/server/utils/dbUtils";
 import { inngest } from "./client";
 import Stripe from "stripe";
 import { NonRetriableError } from "inngest";

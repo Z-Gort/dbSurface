@@ -1,8 +1,11 @@
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
-import { db, users } from "~/server/db";
-import { router } from "../trpc";
-import { protectedProcedure } from "../trpc";
+import { databases, db, projections, users } from "~/server/db";
+import { deleteUser, getToken } from "~/server/utils/kindeUtils";
+import { protectedProcedure, router } from "../trpc";
+import { deleteBucketFolder } from "~/server/utils/dbUtils";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export const usersRouter = router({
   remainingUsage: protectedProcedure.query(async ({ ctx }) => {
@@ -49,5 +52,40 @@ export const usersRouter = router({
       .where(eq(users.kindeId, kindeId));
 
     return result[0]!;
+  }),
+  deleteUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const { id: kindeId } = ctx.auth;
+
+    const token = await getToken();
+    await deleteUser(kindeId, token);
+  }),
+  deleteUserAssets: protectedProcedure.mutation(async ({ ctx }) => {
+    const { id: kindeId } = ctx.auth;
+    const userRes = await db
+      .select()
+      .from(users)
+      .where(eq(users.kindeId, kindeId));
+    const user = userRes[0]!;
+
+    await stripe.customers.del(user.stripeId); //automatically cancels any subscription
+
+    const userDatabases = await db
+      .select()
+      .from(databases)
+      .where(eq(databases.userId, user.userId));
+
+    for (const database of userDatabases) {
+      const dbProjections = await db
+        .select()
+        .from(projections)
+        .where(eq(projections.databaseId, database.databaseId));
+
+      for (const proj of dbProjections) {
+        const projectionId = proj.projectionId;
+        await deleteBucketFolder("quadtree-tiles", projectionId);
+      }
+    }
+
+    await db.delete(users).where(eq(users.kindeId, kindeId));
   }),
 });

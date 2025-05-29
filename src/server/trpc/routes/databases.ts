@@ -7,7 +7,7 @@ import { z } from "zod";
 import { db } from "~/server/db";
 import { r2 } from "~/server/db/r2Client";
 import { databases, projections, users } from "~/server/db/schema";
-import { deleteBucketFolder, getUserIdByKindeId } from "~/server/dbUtils";
+import { deleteBucketFolder, getUserIdByKindeId } from "~/server/utils/dbUtils";
 import { testRemoteConnection } from "~/server/trpc/remoteConnectionUtils";
 import { protectedProcedure, router } from "../trpc";
 
