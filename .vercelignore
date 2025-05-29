@@ -1,5 +1,6 @@
 src/app/api/trpc
 src/app/api/trpcLocal
+src/app/api/auth
 src/app/databases
 src/app/projections
 src/app/layout.tsx
