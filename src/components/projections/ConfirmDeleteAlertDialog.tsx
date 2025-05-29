@@ -10,7 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import { Trash } from "lucide-react";
 
 export interface ConfirmDeleteDialogProps {
@@ -26,13 +26,17 @@ export function ConfirmDeleteAlertDialog({
   title = "Are you sure?",
   description = "This action cannot be undone. This will permanently delete this entry.",
   trigger,
-  disabled
+  disabled,
 }: ConfirmDeleteDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         {trigger ?? (
-          <Button variant="ghost" className="h-8 w-8 p-0 text-red-500" disabled={disabled}>
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0 text-red-500"
+            disabled={disabled}
+          >
             <Trash className="h-4 w-4" />
           </Button>
         )}
@@ -44,7 +48,12 @@ export function ConfirmDeleteAlertDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={onDelete}
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

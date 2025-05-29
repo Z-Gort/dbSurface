@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { trpc } from "~/lib/client";
 import { useRouter } from "next/navigation";
+import { ConfirmDeleteAlertDialog } from "../projections/ConfirmDeleteAlertDialog";
 
 export function UserAvatar() {
   const { user } = useKindeBrowserClient();
@@ -27,7 +28,6 @@ export function UserAvatar() {
     void deleteUserAssets.mutate();
     deleteUser.mutate();
   };
-  console.log("user", user);
 
   const DefaultFallback = () => (
     <AvatarFallback className="flex items-center justify-center rounded-full bg-gradient-to-br from-rose-700 to-rose-500 text-white">
@@ -71,14 +71,26 @@ export function UserAvatar() {
         )}
 
         <div className="mt-3 flex justify-end">
-          <Button
+          <ConfirmDeleteAlertDialog
+            onDelete={handleDelete}
+            title={"Are you sure you want to delete your account?"}
+            description={
+              "This action cannot be undone and will remove all data associated with your account."
+            }
+            trigger={
+              <Button variant="ghost" size="sm" className="mr-4 text-red-500">
+                Delete Account
+              </Button>
+            }
+          ></ConfirmDeleteAlertDialog>
+          {/* <Button
             variant="ghost"
             size="sm"
             onClick={handleDelete}
             className="mr-4 text-red-500"
           >
             Delete Account
-          </Button>
+          </Button> */}
           <LogoutLink>
             <Button variant="secondary" size="sm">
               <LogOut className="h-4 w-4" /> Log out
