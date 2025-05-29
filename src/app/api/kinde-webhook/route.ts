@@ -26,11 +26,9 @@ export async function POST(req: Request) {
     const rawEvent = jwt.verify(token, signingKey);
     const event = KindeEventSchema.parse(rawEvent);
 
-    console.log("event", event);
 
     if (event.type === "user.created") {
       const user = KindeUserSchema.parse(event.data);
-      console.log("user", user);
       void handleUserCreated(user);
     }
   } catch (err) {
@@ -43,6 +41,8 @@ export async function POST(req: Request) {
 }
 
 async function handleUserCreated(user: z.infer<typeof KindeUserSchema>) {
+  try {
+  console.log("handling create")
   const userRes = await db
     .select()
     .from(users)
@@ -68,4 +68,7 @@ async function handleUserCreated(user: z.infer<typeof KindeUserSchema>) {
     stripeId: customer.id,
     subscriptionPeriodEnd: periodEndDate,
   });
+} catch (error) {
+  console.log("error", error)
+}
 }
