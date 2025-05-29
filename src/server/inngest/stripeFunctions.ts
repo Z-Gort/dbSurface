@@ -6,8 +6,8 @@ import { databases, db, projections, users } from "../db";
 import { deleteBucketFolder } from "../utils/dbUtils";
 import { inngest } from "./client";
 import {
-  stripeHookEnvelope,
-  subscriptionSchema,
+  StripeHookEnvelope,
+  SubscriptionSchema,
   type TierSwitch,
 } from "./inngestZodSchemas";
 
@@ -19,7 +19,7 @@ export const subscriptionUpdated = inngest.createFunction(
   { id: "stripe-customer-subscription-updated" },
   { event: "stripe/customer.subscription.updated" },
   async ({ event }) => {
-    const envParsed = stripeHookEnvelope.safeParse(event.data);
+    const envParsed = StripeHookEnvelope.safeParse(event.data);
     if (!envParsed.success) {
       throw new NonRetriableError("Malformed Inngest envelope");
     }
@@ -32,7 +32,7 @@ export const subscriptionUpdated = inngest.createFunction(
       throw new NonRetriableError("Invalid Stripe signature");
     }
 
-    const payloadParsed = subscriptionSchema.safeParse(stripeEvent);
+    const payloadParsed = SubscriptionSchema.safeParse(stripeEvent);
     if (!payloadParsed.success) {
       throw new NonRetriableError("Unexpected Stripe payload shape");
     }
@@ -114,7 +114,7 @@ export const subscriptionUpdated = inngest.createFunction(
 );
 
 function didSubscriptionCycle(
-  stripeUpdateEvent: z.infer<typeof subscriptionSchema>,
+  stripeUpdateEvent: z.infer<typeof SubscriptionSchema>,
 ): boolean {
   //check conditions for subscription cycle
   const sub = stripeUpdateEvent.data.object;
@@ -139,7 +139,7 @@ function didSubscriptionCycle(
 }
 
 function getTierSwitch(
-  stripeUpdateEvent: z.infer<typeof subscriptionSchema>,
+  stripeUpdateEvent: z.infer<typeof SubscriptionSchema>,
   freePriceId: string,
   proPriceId: string,
 ): TierSwitch {

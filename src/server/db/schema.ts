@@ -10,7 +10,6 @@ import {
 
 export const users = pgTable("users", {
   userId: uuid("user_id").primaryKey().defaultRandom().notNull(),
-  email: text("email").notNull(),
   activeDb: uuid("active_db").references(
     (): AnyPgColumn => databases.databaseId,
     {
