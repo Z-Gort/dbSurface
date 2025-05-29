@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { UserAvatar } from "./UserAvatar";
+import Link from "next/link";
 
 // Menu items.
 const items = [
@@ -63,10 +64,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -77,9 +78,6 @@ export function AppSidebar() {
           <div className="mt-4">
           <UserAvatar/>
           </div>
-          <LoginLink>Sign in</LoginLink>
-          <RegisterLink>Sign up</RegisterLink>
-          <LogoutLink>Log out</LogoutLink>
         </SidebarFooter>
       </SidebarContent>
     </Sidebar>

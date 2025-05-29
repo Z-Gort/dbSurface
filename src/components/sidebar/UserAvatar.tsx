@@ -83,14 +83,6 @@ export function UserAvatar() {
               </Button>
             }
           ></ConfirmDeleteAlertDialog>
-          {/* <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDelete}
-            className="mr-4 text-red-500"
-          >
-            Delete Account
-          </Button> */}
           <LogoutLink>
             <Button variant="secondary" size="sm">
               <LogOut className="h-4 w-4" /> Log out
