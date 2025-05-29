@@ -19,7 +19,7 @@ export function UserAvatar() {
   const router = useRouter();
   const deleteUser = trpc.users.deleteUser.useMutation({
     onSuccess: () => {
-      void router.push("/api/auth/logout");
+      router.push("/api/auth/logout");
     },
   });
   const deleteUserAssets = trpc.users.deleteUserAssets.useMutation();
