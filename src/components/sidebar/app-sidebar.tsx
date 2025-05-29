@@ -1,11 +1,7 @@
 "use client";
 
-import {
-  LoginLink,
-  LogoutLink,
-  RegisterLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 import { Code, CreditCard, Database, Eye } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Sidebar,
@@ -19,7 +15,6 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { UserAvatar } from "./UserAvatar";
-import Link from "next/link";
 
 // Menu items.
 const items = [
