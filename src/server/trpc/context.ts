@@ -23,16 +23,12 @@ export const createContext = async ({
   let userId = null;
   let isAuthenticated = false;
 
-  console.log("token", token);
-
   if (token) {
     try {
       const rawValidation = await validateToken({
         token,
         domain: "https://dbsurface.kinde.com",
       });
-
-      console.log("rawValidation", rawValidation);
 
       const decoded = jwt.decode(token) as {
         sub?: string;
@@ -48,8 +44,6 @@ export const createContext = async ({
       console.error("JWT validation failed:", err);
     }
   }
-  console.log("userId", userId);
-  console.log("isAuthenticated", isAuthenticated);
 
   return { userId, isAuthenticated };
 };
