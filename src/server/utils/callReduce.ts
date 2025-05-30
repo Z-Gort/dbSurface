@@ -1,4 +1,4 @@
-interface reduceColumnProps {
+interface reduceTableProps {
   schema: string;
   table: string;
   vectorColumn: string;
@@ -9,7 +9,7 @@ interface reduceColumnProps {
   remainingRows: number;
 }
 
-export function reduceColumn({
+export function reduceTable({
   schema,
   table,
   vectorColumn,
@@ -17,8 +17,8 @@ export function reduceColumn({
   projectionId,
   numberPoints,
   databaseId,
-  remainingRows
-}: reduceColumnProps) {
+  remainingRows,
+}: reduceTableProps) {
   const endpointUrl = new URL(process.env.MODAL_ENDPOINT_URL!);
 
   endpointUrl.searchParams.append("schema", schema);

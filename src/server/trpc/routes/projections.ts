@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm/expressions";
 import { z } from "zod";
-import { reduceColumn } from "~/server/utils/callReduce";
+import { reduceTable } from "~/server/utils/callReduce";
 import { db } from "~/server/db";
 import { projections, users } from "~/server/db/schema";
 import { deleteBucketFolder } from "~/server/utils/dbUtils";
@@ -72,56 +72,56 @@ export const projectionsRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       try {
-      const kindeId = ctx.userId;
-      const {
-        databaseId,
-        schema,
-        table,
-        numberPoints,
-        primaryKeyColumn,
-        vectorColumn,
-        displayName,
-        trimmedCols,
-        remainingRows,
-      } = input;
+        const kindeId = ctx.userId;
+        const {
+          databaseId,
+          schema,
+          table,
+          numberPoints,
+          primaryKeyColumn,
+          vectorColumn,
+          displayName,
+          trimmedCols,
+          remainingRows,
+        } = input;
 
-      await db
-        .update(users)
-        .set({
-          monthlyProjections: sql`${users.monthlyProjections} + 1`,
-          monthlyProjectedRows: sql`${users.monthlyProjectedRows} + ${numberPoints}`,
-        })
+        await db
+          .update(users)
+          .set({
+            monthlyProjections: sql`${users.monthlyProjections} + 1`,
+            monthlyProjectedRows: sql`${users.monthlyProjectedRows} + ${numberPoints}`,
+          })
 
-        .where(eq(users.kindeId, kindeId));
+          .where(eq(users.kindeId, kindeId));
 
-      const [insertedProjection] = await db
-        .insert(projections)
-        .values({
-          displayName: displayName,
-          databaseId: databaseId,
-          schema: schema,
-          table: table,
-          numberPoints: numberPoints,
-          columns: trimmedCols,
-          status: "creating",
-        })
-        .returning({ projectionId: projections.projectionId });
+        const [insertedProjection] = await db
+          .insert(projections)
+          .values({
+            displayName: displayName,
+            databaseId: databaseId,
+            schema: schema,
+            table: table,
+            numberPoints: numberPoints,
+            columns: trimmedCols,
+            status: "creating",
+          })
+          .returning({ projectionId: projections.projectionId });
 
-      reduceColumn({
-        schema,
-        table,
-        vectorColumn,
-        primaryKeyColumn,
-        projectionId: insertedProjection!.projectionId,
-        numberPoints,
-        databaseId,
-        remainingRows,
-      });
+        reduceTable({
+          schema,
+          table,
+          vectorColumn,
+          primaryKeyColumn,
+          projectionId: insertedProjection!.projectionId,
+          numberPoints,
+          databaseId,
+          remainingRows,
+        });
 
-      return { projectionId: insertedProjection!.projectionId };
-    } catch (err) {
-      console.error("Error triggering Modal function:", err);
-    }
+        return { projectionId: insertedProjection!.projectionId };
+      } catch (err) {
+        console.error("Error triggering Modal function:", err);
+      }
     }),
   getProjection: protectedProcedure
     .input(

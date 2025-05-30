@@ -29,18 +29,14 @@ export const createContext = async ({
         token,
         domain: "https://dbsurface.kinde.com",
       });
-      console.log("Kinde JWT validation result:", rawValidation);
-      console.log("token", token);
 
       const decoded = jwt.decode(token) as {
         sub?: string;
       } | null;
 
-      console.log("decoded", decoded)
-
       if (decoded?.sub) {
         userId = decoded.sub;
-        isAuthenticated = true;
+        isAuthenticated = rawValidation.valid;
       } else {
         console.warn("JWT decoded but no sub claim:", decoded);
       }

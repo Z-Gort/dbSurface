@@ -1,5 +1,5 @@
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
-import { LogoutLink } from '@kinde-oss/kinde-auth-react/components';
+import { LogoutLink } from "@kinde-oss/kinde-auth-react/components";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   Popover,
@@ -13,11 +13,11 @@ import { useRouter } from "next/navigation";
 import { ConfirmDeleteAlertDialog } from "../projections/ConfirmDeleteAlertDialog";
 
 export function UserAvatar() {
-  const { user } = useKindeAuth();
+  const { user, logout } = useKindeAuth();
   const router = useRouter();
   const deleteUser = trpc.users.deleteUser.useMutation({
     onSuccess: () => {
-      router.push("/api/auth/logout");
+      void logout();
     },
   });
   const deleteUserAssets = trpc.users.deleteUserAssets.useMutation();

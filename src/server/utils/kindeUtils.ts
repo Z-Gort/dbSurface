@@ -24,7 +24,6 @@ export async function getToken(): Promise<string> {
   }
 
   const json = tokenResponseSchema.parse(await response.json());
-  console.log("json", json);
 
   return json.access_token;
 }
@@ -39,8 +38,6 @@ export async function deleteUser(kindeId: string, token: string) {
       },
     },
   );
-
-  console.log("response", response);
 
   if (!response.ok) {
     console.log("response", response);
