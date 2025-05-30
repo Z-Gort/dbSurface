@@ -1,20 +1,18 @@
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-react/components";
+import { LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { Button } from "../ui/button";
-import { LogOut } from "lucide-react";
 import { trpc } from "~/lib/client";
-import { useRouter } from "next/navigation";
 import { ConfirmDeleteAlertDialog } from "../projections/ConfirmDeleteAlertDialog";
+import { Button } from "../ui/button";
 
 export function UserAvatar() {
   const { user, logout } = useKindeAuth();
-  const router = useRouter();
   const deleteUser = trpc.users.deleteUser.useMutation({
     onSuccess: () => {
       void logout();
