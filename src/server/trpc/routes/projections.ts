@@ -71,6 +71,7 @@ export const projectionsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
+      try {
       const kindeId = ctx.userId;
       const {
         databaseId,
@@ -118,6 +119,9 @@ export const projectionsRouter = router({
       });
 
       return { projectionId: insertedProjection!.projectionId };
+    } catch (err) {
+      console.error("Error triggering Modal function:", err);
+    }
     }),
   getProjection: protectedProcedure
     .input(
