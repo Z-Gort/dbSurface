@@ -3,9 +3,8 @@ import { appRouter } from '~/server/trpc';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { createContext } from '~/server/trpc/context';
 
-const ALLOWED_ORIGIN = process.env.NEXT_PUBLIC_CLIENT_URL!; // e.g. "http://localhost:3000"
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin':      ALLOWED_ORIGIN,
+  'Access-Control-Allow-Origin':      'http://localhost:4800',
   'Access-Control-Allow-Credentials': 'true',
   'Access-Control-Allow-Methods':     'GET,POST,OPTIONS',
   'Access-Control-Allow-Headers':     'Authorization, Content-Type',
