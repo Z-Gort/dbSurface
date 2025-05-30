@@ -15,14 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthProvider>
-      <html lang="en" className="h-full">
-        <body
-          className={cn(
-            "relative h-full font-sans antialiased",
-            inter.className,
-          )}
-        >
+    <html lang="en" className="h-full">
+      <body
+        className={cn("relative h-full font-sans antialiased", inter.className)}
+      >
+        <AuthProvider>
           <TrpcProvider>
             <TabProvider>
               <SidebarProvider>
@@ -33,8 +30,8 @@ export default function RootLayout({
               </SidebarProvider>
             </TabProvider>
           </TrpcProvider>
-        </body>
-      </html>
-    </AuthProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }
