@@ -17,7 +17,7 @@ const TrpcProvider = ({ children }: PropsWithChildren) => {
           condition: (op) => (op.context as ApiContext)?.source !== "local",
 
           true: httpBatchLink({
-            url: "/api/trpc",
+            url: `${process.env.NEXT_PUBLIC_VERCEL_REMOTE_URL}/api/trpc/`,
             fetch: (url, opts) =>
               fetch(url, { ...opts, credentials: "include" }),
           }),

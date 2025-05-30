@@ -1,4 +1,3 @@
-src/app/api/trpc
 src/app/api/trpcLocal
 src/app/api/auth
 src/app/databases
@@ -11,5 +10,4 @@ src/lib
 src/miscellaneousTypes
 src/middleware.ts
 src/server/db/migrations
-src/server/trpc
 src/server/trpcLocal

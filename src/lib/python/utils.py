@@ -5,7 +5,7 @@ def check_and_update_usage(
     database_id: str,
     total_rows_estimate_int: int,
     supabase_client,
-    vol
+    vol,
 ) -> None:
     import pyarrow.dataset as ds
     import os, glob
@@ -57,9 +57,7 @@ def check_and_update_usage(
     ).execute()
 
     if num_rows > remaining_rows:
-        raise RuntimeError(
-            f"Usage limit exceeded: cancelling reduce."
-        )
+        raise RuntimeError(f"Usage limit exceeded: cancelling reduce.")
 
 
 def get_num_shards(total_rows: int, creds) -> int:
