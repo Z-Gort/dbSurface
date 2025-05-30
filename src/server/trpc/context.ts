@@ -23,7 +23,6 @@ export const createContext = async ({ req }: { req: Request }): Promise<AuthCont
       });
       console.log("Kinde JWT validation result:", rawValidation);
 
-      // most validators put the user ID in `sub`
       userId = rawValidation.message;
       isAuthenticated = true;
     } catch (err) {
