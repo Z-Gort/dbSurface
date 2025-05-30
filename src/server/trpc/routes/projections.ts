@@ -71,7 +71,7 @@ export const projectionsRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { id: kindeId } = ctx.auth;
+      const kindeId = ctx.userId;
       const {
         databaseId,
         schema,
@@ -90,6 +90,8 @@ export const projectionsRouter = router({
           monthlyProjections: sql`${users.monthlyProjections} + 1`,
           monthlyProjectedRows: sql`${users.monthlyProjectedRows} + ${numberPoints}`,
         })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         .where(eq(users.kindeId, kindeId));
 
       const [insertedProjection] = await db
