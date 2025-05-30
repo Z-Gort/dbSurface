@@ -1,6 +1,3 @@
-/* eslint-disable */
-/* @ts-nocheck */
-
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 import { databases, db, projections, users } from "~/server/db";
@@ -17,8 +14,6 @@ export const usersRouter = router({
     const user = await db
       .select()
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
     const usedRows = user[0]!.monthlyProjectedRows;
     const usedProjections = user[0]!.monthlyProjections;
@@ -35,8 +30,6 @@ export const usersRouter = router({
     const stripeResult = await db
       .select({ stripeId: users.stripeId })
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
 
     const stripeId = stripeResult[0]!.stripeId;
@@ -56,8 +49,6 @@ export const usersRouter = router({
     const result = await db
       .select()
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
 
     return result[0]!;
@@ -66,8 +57,6 @@ export const usersRouter = router({
     const kindeId = ctx.userId;
 
     const token = await getToken();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
     await deleteUser(kindeId, token);
   }),
   deleteUserAssets: protectedProcedure.mutation(async ({ ctx }) => {
@@ -75,8 +64,6 @@ export const usersRouter = router({
     const userRes = await db
       .select()
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
     const user = userRes[0]!;
 
@@ -99,8 +86,6 @@ export const usersRouter = router({
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
     await db.delete(users).where(eq(users.kindeId, kindeId));
   }),
 });

@@ -20,7 +20,7 @@ export const createContext = async ({
     ? authHeader.split(" ")[1]
     : "";
 
-  let userId: string | null = null;
+  let userId = null;
   let isAuthenticated = false;
 
   if (token) {
@@ -34,8 +34,6 @@ export const createContext = async ({
 
       const decoded = jwt.decode(token) as {
         sub?: string;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [k: string]: any;
       } | null;
 
       console.log("decoded", decoded)

@@ -1,6 +1,3 @@
-/* eslint-disable */
-/* @ts-nocheck */
-
 import { eq } from "drizzle-orm";
 import Stripe from "stripe";
 import { db, users } from "~/server/db";
@@ -14,8 +11,6 @@ export const stripeRouter = router({
     const stripeResult = await db
       .select({ stripeId: users.stripeId })
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
 
     const stripeId = stripeResult[0]!.stripeId;

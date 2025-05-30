@@ -46,8 +46,6 @@ export const databasesRouter = router({
         };
       } else {
         const kindeId = ctx.userId;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
         const userId = await getUserIdByKindeId(kindeId);
 
         const result = await db
@@ -71,8 +69,6 @@ export const databasesRouter = router({
     }),
   listUserDatabases: protectedProcedure.query(async ({ ctx }) => {
     const kindeId = ctx.userId;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
     const userId = await getUserIdByKindeId(kindeId);
 
     const results = await db
@@ -160,8 +156,6 @@ export const databasesRouter = router({
           .set({
             activeDb: input.databaseId,
           })
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-expect-error
           .where(eq(users.kindeId, kindeId));
       } catch (error) {
         console.log("getactivedb error", error);
@@ -173,8 +167,6 @@ export const databasesRouter = router({
     const result = await db
       .select()
       .from(users)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-expect-error
       .where(and(eq(users.kindeId, kindeId), isNotNull(users.activeDb)));
 
     return result[0]?.activeDb ?? null;
