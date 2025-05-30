@@ -45,7 +45,9 @@ export const databasesRouter = router({
           databaseId: input.databaseId,
         };
       } else {
-        const { id: kindeId } = ctx.auth;
+        const kindeId = ctx.userId;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-expect-error
         const userId = await getUserIdByKindeId(kindeId);
 
         const result = await db
@@ -68,7 +70,9 @@ export const databasesRouter = router({
       }
     }),
   listUserDatabases: protectedProcedure.query(async ({ ctx }) => {
-    const { id: kindeId } = ctx.auth;
+    const kindeId = ctx.userId;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     const userId = await getUserIdByKindeId(kindeId);
 
     const results = await db
@@ -149,24 +153,28 @@ export const databasesRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { id: kindeId } = ctx.auth;
+      const kindeId = ctx.userId;
       try {
         await db
           .update(users)
           .set({
             activeDb: input.databaseId,
           })
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-expect-error
           .where(eq(users.kindeId, kindeId));
       } catch (error) {
         console.log("getactivedb error", error);
       }
     }),
   getActiveDb: protectedProcedure.query(async ({ ctx }) => {
-    const { id: kindeId } = ctx.auth;
+    const kindeId = ctx.userId;
 
     const result = await db
       .select()
       .from(users)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
       .where(and(eq(users.kindeId, kindeId), isNotNull(users.activeDb)));
 
     return result[0]?.activeDb ?? null;

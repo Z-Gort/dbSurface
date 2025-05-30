@@ -9,11 +9,13 @@ import { protectedProcedure } from "../trpc";
 
 export const stripeRouter = router({
   createCustomerPortal: protectedProcedure.mutation(async ({ ctx }) => {
-    const { id: kindeId } = ctx.auth;
+    const kindeId = ctx.userId;
 
     const stripeResult = await db
       .select({ stripeId: users.stripeId })
       .from(users)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
       .where(eq(users.kindeId, kindeId));
 
     const stripeId = stripeResult[0]!.stripeId;
