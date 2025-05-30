@@ -12,7 +12,8 @@ const CORS_HEADERS = {
 };
 
 // handle preflight
-export async function OPTIONS() {
+export async function OPTIONS(req: Request) {
+  console.log('[trpc] OPTIONS', { url: req.url, origin: req.headers.get('origin') });
   return new Response(null, {
     status: 204,
     headers: CORS_HEADERS,
@@ -21,6 +22,7 @@ export async function OPTIONS() {
 
 // wrap your real handler to inject CORS on every response
 async function handle(req: Request) {
+  console.log('[trpc] handling', req.method, req.url);
   // 1) run tRPC
   const res = await fetchRequestHandler({
     endpoint: '/api/trpc',
