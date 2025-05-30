@@ -1,7 +1,5 @@
-import {
-  LogoutLink,
-  useKindeBrowserClient,
-} from "@kinde-oss/kinde-auth-nextjs";
+import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { LogoutLink } from '@kinde-oss/kinde-auth-react/components';
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   Popover,
@@ -15,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { ConfirmDeleteAlertDialog } from "../projections/ConfirmDeleteAlertDialog";
 
 export function UserAvatar() {
-  const { user } = useKindeBrowserClient();
+  const { user } = useKindeAuth();
   const router = useRouter();
   const deleteUser = trpc.users.deleteUser.useMutation({
     onSuccess: () => {
@@ -63,9 +61,9 @@ export function UserAvatar() {
             <span className="my-2 block h-px w-full bg-gray-300" />
           </>
         )}
-        {user?.given_name && (
+        {user?.givenName && (
           <>
-            <p className="font-small text-sm">{user?.given_name}</p>
+            <p className="font-small text-sm">{user?.givenName}</p>
             <span className="my-2 block h-px w-full bg-gray-300" />
           </>
         )}
