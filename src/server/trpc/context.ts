@@ -22,6 +22,7 @@ export const createContext = async ({ req }: { req: Request }): Promise<AuthCont
         domain: "https://dbsurface.kinde.com",
       });
       console.log("Kinde JWT validation result:", rawValidation);
+      console.log("token", token)
 
       userId = rawValidation.message;
       isAuthenticated = true;
