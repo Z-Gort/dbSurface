@@ -47,6 +47,9 @@ importers:
       '@kinde-oss/kinde-typescript-sdk':
         specifier: ^2.10.1
         version: 2.10.1
+      '@kinde/jwt-validator':
+        specifier: ^0.4.0
+        version: 0.4.0
       '@loaders.gl/arrow':
         specifier: ^4.3.3
         version: 4.3.3(@loaders.gl/core@4.3.3)

@@ -29,6 +29,7 @@
     "@kinde-oss/kinde-auth-pkce-js": "^4.3.0",
     "@kinde-oss/kinde-auth-react": "^5.4.1",
     "@kinde-oss/kinde-typescript-sdk": "^2.10.1",
+    "@kinde/jwt-validator": "^0.4.0",
     "@loaders.gl/arrow": "^4.3.3",
     "@loaders.gl/core": "^4.3.3",
     "@monaco-editor/react": "^4.6.0",
