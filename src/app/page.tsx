@@ -6,8 +6,6 @@ import { trpc } from "~/lib/client";
 import "~/styles/globals.css";
 
 const Page = () => {
-  //for this page we don't load until local connection is set...
-  //there's just have an error message for the case the user tries to make a query incredibly quickly
   const setLocalConnection = trpc.local.setConnection.useMutation({
     trpc: {
       context: { source: "local" },

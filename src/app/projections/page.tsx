@@ -64,23 +64,19 @@ export default function Projections() {
   if (activeDbLoading || projectionsLoading) {
     return (
       <div className="mx-auto w-full py-10 pl-5 pr-10">
-        {/* New Projection button placeholder */}
         <div className="mb-4 flex justify-end">
           <Skeleton className="h-10 w-36 rounded-md" />
         </div>
 
-        {/* Table skeleton */}
         <div className="overflow-x-auto">
           <div className="min-w-[700px] animate-pulse rounded-lg border bg-white shadow">
-            {/* Header */}
             <div className="grid grid-cols-4 gap-4 border-b bg-gray-50 p-4">
-              <Skeleton className="h-4 w-24 rounded-md" /> {/* Projection */}
-              <Skeleton className="h-4 w-32 rounded-md" /> {/* Table */}
-              <Skeleton className="h-4 w-16 rounded-md" /> {/* Vector count */}
-              <Skeleton className="h-4 w-20 rounded-md" /> {/* Status */}
+              <Skeleton className="h-4 w-24 rounded-md" /> 
+              <Skeleton className="h-4 w-32 rounded-md" /> 
+              <Skeleton className="h-4 w-16 rounded-md" /> 
+              <Skeleton className="h-4 w-20 rounded-md" />
             </div>
 
-            {/* Data rows */}
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}

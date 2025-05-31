@@ -36,7 +36,6 @@ export function PlanCard({
     <Card
       className={`max-w-xs relative flex flex-col overflow-hidden ${accentRing} ${accentShadow}`}
     >
-      {/* active badge */}
       {isCurrent && (
         <span className="absolute right-2 top-2 z-10 flex items-center gap-1 rounded-full bg-emerald-600/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
           <Crown className="h-3 w-3" />
@@ -58,7 +57,6 @@ export function PlanCard({
       </CardHeader>
 
       <CardContent className="flex grow flex-col">
-        {/* feature list */}
         <ul className="space-y-3 py-0 text-sm">
           {features.map((feat) => (
             <li key={feat} className="flex items-start gap-2 leading-snug">

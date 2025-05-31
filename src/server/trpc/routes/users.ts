@@ -18,7 +18,7 @@ export const usersRouter = router({
     const usedRows = user[0]!.monthlyProjectedRows;
     const usedProjections = user[0]!.monthlyProjections;
     const totalRows = user[0]!.plan === "free" ? 250_000 : 40_000_000;
-    const totalProjections = user[0]!.plan === "free" ? 10 : 200;
+    const totalProjections = user[0]!.plan === "free" ? 10 : 100;
     const remainingRows = totalRows - usedRows;
     const remainingProjections = totalProjections - usedProjections;
 

@@ -9,7 +9,7 @@ export function Usage() {
   const ready = !!currentPlan && !!remainingUsage;
 
   const rowsLimit = currentPlan?.plan === "pro" ? 40_000_000 : 250_000;
-  const projLimit = currentPlan?.plan === "pro" ? 200 : 10;
+  const projLimit = currentPlan?.plan === "pro" ? 100 : 10;
 
   const rowsUsed = ready ? rowsLimit - remainingUsage.remainingRows : 0;
   const projUsed = ready ? projLimit - remainingUsage.remainingProjections : 0;

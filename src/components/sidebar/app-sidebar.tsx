@@ -49,7 +49,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel className="mt-8 h-6 px-0">
             <img
-              src="/logo-transparent_no_name.png"
+              src="/logo_transparent.png"
               className="mb-10 h-6 sm:h-11"
               alt="dbSurface"
             />

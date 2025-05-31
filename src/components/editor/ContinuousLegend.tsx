@@ -49,7 +49,6 @@ export function ContinuousLegend({
         fontSize,
       }}
     >
-      {/* ░░ colour bar ░░ */}
       <div
         style={{
           display: "flex",

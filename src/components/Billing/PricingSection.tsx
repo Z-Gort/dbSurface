@@ -50,7 +50,7 @@ export function PricingSection() {
           title="Pro"
           price="$13"
           features={[
-            "200 projections",
+            "100 projections",
             "40,000,000 projected rows",
             "Support on GitHub",
           ]}

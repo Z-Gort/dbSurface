@@ -37,7 +37,7 @@ export function ColorBy() {
 
   const columns = projection.data?.projection?.columns ?? [];
 
-  useEffect(() => {}, [deckglLoaded]); //Update with descrete columns or continuous buckets
+  useEffect(() => {}, [deckglLoaded]); //Reload module to get updated discrete or continuous buckets
 
   const defaultToggle = colorBy?.discrete === false ? "continuous" : "discrete";
 
@@ -147,7 +147,7 @@ export function ColorBy() {
         </Tabs>
 
         {/* If on the first viewport load there are less than 200 found categories, then on zooming in there are more that are found the 
-        legend won't show more--updating state on every viewport load is too costly--but using more than 10-20 categories is not really feasibly anyway*/}
+        legend won't show more--updating state on every viewport load is too costly--but using more than 10-20 categories is not really feasible anyway.*/}
         {deckglLoaded &&
           colorBy?.discrete &&
           categoryMap.current &&

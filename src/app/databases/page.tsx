@@ -79,21 +79,18 @@ export default function Databases() {
   if (isLoading) {
     return (
       <div className="mx-auto w-full py-10 pl-5 pr-10">
-        {/* “New Connection” button placeholder in the top-right */}
         <div className="mb-6 flex justify-end">
           <Skeleton className="h-10 w-36 rounded-lg" />
         </div>
 
-        {/* Grid of 3 square-ish cards */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
               className="flex h-36 animate-pulse flex-col rounded-lg border bg-white p-6 shadow"
             >
-              {/* Card header: title + icons */}
+
               <div className="mb-2 flex items-start justify-between">
-                {/* nudge the title down 2px (mt-0.5), icons stay flush top */}
                 <Skeleton className="mt-0.5 h-6 w-24 rounded-md" />
                 <div className="flex space-x-2">
                   <Skeleton className="h-5 w-5 rounded-full" />
@@ -101,7 +98,6 @@ export default function Databases() {
                 </div>
               </div>
 
-              {/* Card subtitle / body */}
               <Skeleton className="h-4 w-3/4 rounded-md" />
             </div>
           ))}
