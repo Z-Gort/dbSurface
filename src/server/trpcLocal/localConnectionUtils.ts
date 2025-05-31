@@ -265,6 +265,5 @@ export async function copyHashedIdsSharded(
   // wait for all, flatten, return
   const shards = await Promise.all(shardPromises);
   const flat = shards.flat();
-  console.log(`copyHashedIds (binary) done in ${Date.now() - t0} ms`);
   return Uint32Array.from(flat);
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Row } from "@tanstack/react-table";
+import { type Row } from "@tanstack/react-table";
 import { trpc } from "~/lib/client";
 import type { Projection } from "./Columns";
 import { useToast } from "~/components/hooks/use-toast";

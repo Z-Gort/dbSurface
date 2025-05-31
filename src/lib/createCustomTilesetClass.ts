@@ -1,6 +1,6 @@
 import { _Tileset2D as Tileset2D } from "@deck.gl/geo-layers";
 
-//mostly rewritten from deck.gl with minor changes
+//mostly from deck.gl with minor changes
 
 const DEFAULT_EXTENT: any = [-Infinity, -Infinity, Infinity, Infinity];
 const TILE_SIZE = 512;

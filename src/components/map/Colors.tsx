@@ -32,6 +32,7 @@ export const DECILE_COLORS: [number, number, number, number][] = [
 ];
 
 //can be used to create more pallettes
+
 // import { scaleQuantize } from "d3-scale";
 // import { interpolateMagma } from "d3-scale-chromatic";
 // import { rgb } from "d3-color";

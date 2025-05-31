@@ -5,6 +5,7 @@ import "react-data-grid/lib/styles.css";
 import "~/styles/globals.css";
 import AutoSizer from "react-virtualized-auto-sizer";
 
+//this module could potentially be refactored
 const EST_CHAR_WIDTH = 8.25;
 const MIN_COLUMN_WIDTH = 100;
 const MAX_COLUMN_WIDTH = 550;

@@ -62,7 +62,7 @@ class QuadTree:
         import numpy as np
         from sklearn.neighbors import NearestNeighbors
 
-        # 0) build coords array
+        # build coords array
         coords = np.stack([[x, y] for x, y, _ in items])  # (n,2)
         n = len(coords)
         M = self.MAX_TILE_POINTS
@@ -131,7 +131,7 @@ class QuadTree:
                 seen.add(i)
                 real_sample.append(items[i])
 
-        # If we’re short, fill up with random unused points
+        # If we’re short, fill up with random unused points (shouldn't happen)
         if len(real_sample) < self.MAX_TILE_POINTS:
             all_indices = set(range(len(items)))
             unused = list(all_indices - seen)

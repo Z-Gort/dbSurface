@@ -7,7 +7,7 @@ import { trpc } from "~/lib/client";
 import { createCustomTilesetClass } from "~/lib/createCustomTilesetClass";
 import { CustomScatterplotLayer } from "~/lib/customScatterplotLayer";
 import {
-  NonEmptyIterableData,
+  type NonEmptyIterableData,
   type IterableData,
   type Metadata,
   type TileSource,
@@ -238,7 +238,7 @@ export default function Map() {
           pickable: false,
           getLineWidth: 0.1,
           opacity: 0.4,
-          visible: props.tile.index.z === 9,
+          visible: false, //set to e.g. props.tile.index.z === 2 to see tiles
           getPolygon: (bbox) => {
             const [min, max] = bbox;
             const [xMin, yMin] = min;
@@ -276,7 +276,7 @@ export default function Map() {
         );
       },
       getPosition: (_, { index, data, target }) => {
-        // incoming data does not have set typing--though can assume x, y, ix exist
+        // incoming data does not have set typing--though we know x, y, ix exist
         target[0] = data.src.x[index];
         target[1] = data.src.y[index];
         return target;

@@ -1,6 +1,6 @@
 import modal
 
-app = modal.App("create projection")
+app = modal.App("create_projection")
 
 MOUNT = "/cache"
 vol = modal.Volume.from_name("reduction-files", create_if_missing=True)

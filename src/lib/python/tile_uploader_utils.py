@@ -16,8 +16,6 @@ def finalize_projection(metadata, digest_by_col, projection_id, supabase, num_ro
         "colorStats": color_stats,
     }
 
-    print("final metadata", final_metadata)
-
     path = "/tmp/tiles/metadata.json"
     with open(path, "w") as f:
         json.dump(final_metadata, f, indent=2)

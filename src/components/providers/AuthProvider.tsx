@@ -15,7 +15,7 @@ function InnerGate({ children }: { children: ReactNode }) {
   }, [isLoading, isAuthenticated, login]);
 
   if (isLoading || !isAuthenticated) {
-    // show logo with loading state...
+    // could show logo/loading state but this is fast
     return null;
   }
 

@@ -3,7 +3,7 @@ import postgres from "postgres";
 import * as schema from "./schema";
 
 let connection: postgres.Sql;
-//just get ipv4 supabase add on probably
+//could get supabase ipv4 add on for maybe lowered latency
 if (process.env.NODE_ENV === "production") {
   connection = postgres(process.env.SUPABASE_TCP_URL!, { prepare: false });
 } else {

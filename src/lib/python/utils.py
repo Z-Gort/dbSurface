@@ -237,15 +237,15 @@ def fetch_table_helper(
                 writer = _flush(buf, col_names, writer, sink)
                 t_flush += time.perf_counter() - t0
                 dt = time.perf_counter() - t0_batch
-                print(
-                    f"⤵︎ batch {batch_rows:5} rows | "
-                    f"{batch_bytes/1_048_576:5.1f} MiB | "
-                    f"{batch_rows/dt:7.0f} r/s | "
-                    f"{batch_bytes*8/dt/1_000_000:6.1f} Mb/s | "
-                    f"read {t_read:.2f}s, parse {t_parse:.2f}s, "
-                    f"flush {t_flush:.2f}s",
-                    f"{shard_id} shard_id",
-                )
+                # print( #prints each batch of 1000
+                #     f"⤵︎ batch {batch_rows:5} rows | "
+                #     f"{batch_bytes/1_048_576:5.1f} MiB | "
+                #     f"{batch_rows/dt:7.0f} r/s | "
+                #     f"{batch_bytes*8/dt/1_000_000:6.1f} Mb/s | "
+                #     f"read {t_read:.2f}s, parse {t_parse:.2f}s, "
+                #     f"flush {t_flush:.2f}s",
+                #     f"{shard_id} shard_id",
+                # )
                 # reset counters
                 batch_rows = batch_bytes = 0
                 t_read = t_parse = t_flush = 0.0
@@ -325,8 +325,6 @@ def embed_to_2d_helper(
         n = vecs.shape[0]
         mmap[out : out + n, :] = vecs
         out += n
-
-    print("filled mem-map →", mmap_path)
 
     bytes_per_vec = dim * 4 + n_neighbors * 8
     n_clusters = max(1, math.ceil((bytes_per_vec * num_rows) / target_gpu_mem))

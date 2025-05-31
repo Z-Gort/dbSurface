@@ -1,17 +1,16 @@
-import md5 from "spark-md5";
-import {
-  Columns,
-  IterableData,
-  NonEmptyIterableData,
-  TileSource,
-  type Metadata,
-} from "~/miscellaneousTypes/types";
-import { ZSTDDecoder } from "zstddec";
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
-import { MutableRefObject, SetStateAction, useEffect, useState } from "react";
-import { trpc } from "~/lib/client";
-import { TabState } from "../providers/TabContext";
+import { type MutableRefObject, type SetStateAction, useEffect, useState } from "react";
+import md5 from "spark-md5";
+import { ZSTDDecoder } from "zstddec";
+import {
+  type Columns,
+  type IterableData,
+  type Metadata,
+  type NonEmptyIterableData,
+  type TileSource,
+} from "~/miscellaneousTypes/types";
+import { type TabState } from "../providers/TabContext";
 
 export function hash32(val: string | number): number {
   const hex = md5.hash(String(val)) as string;
