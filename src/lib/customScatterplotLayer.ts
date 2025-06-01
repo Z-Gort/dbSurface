@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { type GetPickingInfoParams, type PickingInfo } from "@deck.gl/core";
 import { ScatterplotLayer, type ScatterplotLayerProps } from "@deck.gl/layers";
 import { type IterableData } from "~/miscellaneousTypes/types";

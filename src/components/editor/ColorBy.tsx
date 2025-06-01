@@ -37,6 +37,7 @@ export function ColorBy() {
 
   const columns = projection.data?.projection?.columns ?? [];
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   useEffect(() => {}, [deckglLoaded]); //Reload module to get updated discrete or continuous buckets
 
   const defaultToggle = colorBy?.discrete === false ? "continuous" : "discrete";

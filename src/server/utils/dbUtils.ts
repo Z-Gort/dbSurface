@@ -1,9 +1,8 @@
-import { db } from "~/server/db";
-import { users } from "~/server/db/schema";
+import { DeleteObjectsCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { eq } from "drizzle-orm";
+import { db } from "~/server/db";
 import { r2 } from "~/server/db/r2Client";
-import { ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
-import { z } from "zod";
+import { users } from "~/server/db/schema";
 
 export async function getUserIdByKindeId(kindeId: string): Promise<string> {
   const userRes = await db

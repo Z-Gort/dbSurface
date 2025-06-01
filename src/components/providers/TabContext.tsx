@@ -24,6 +24,7 @@ export type TabState = { //some of these fields are not strictly necessary witho
   currentHover: {
     index: number;
     layerId: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data: any;
   };
   continuousCols?: string[];

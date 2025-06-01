@@ -18,6 +18,7 @@ export function HoverData() {
     return null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const data = currentHover.data as Record<string, any>;
 
   return (
@@ -28,6 +29,7 @@ export function HoverData() {
             if (rawKey === "x" || rawKey === "y" || rawKey === "pkHash") {
               return null;
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             let displayValue = rawValue;
             if (timestampCols.current.has(rawKey.replace(/^user_/, ""))) {
               const ms = Number(rawValue);

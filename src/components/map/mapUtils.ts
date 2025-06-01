@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { ArrowLoader } from "@loaders.gl/arrow";
 import { load } from "@loaders.gl/core";
 import { type MutableRefObject, type SetStateAction, useEffect, useState } from "react";

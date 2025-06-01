@@ -71,12 +71,13 @@ export default function Projections() {
         <div className="overflow-x-auto">
           <div className="min-w-[700px] animate-pulse rounded-lg border bg-white shadow">
             <div className="grid grid-cols-4 gap-4 border-b bg-gray-50 p-4">
-              <Skeleton className="h-4 w-24 rounded-md" /> 
-              <Skeleton className="h-4 w-32 rounded-md" /> 
-              <Skeleton className="h-4 w-16 rounded-md" /> 
+              <Skeleton className="h-4 w-24 rounded-md" />
+              <Skeleton className="h-4 w-32 rounded-md" />
+              <Skeleton className="h-4 w-16 rounded-md" />
               <Skeleton className="h-4 w-20 rounded-md" />
             </div>
 
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
@@ -95,7 +96,7 @@ export default function Projections() {
   }
 
   return (
-    <div className="w-full h-screen overflow-hidden">
+    <div className="h-screen w-full overflow-hidden">
       <div className="mx-auto w-full py-10 pl-5 pr-10">
         <div className="mb-4 flex justify-end">
           <NewProjectionDialog
@@ -106,6 +107,6 @@ export default function Projections() {
           <DataTable columns={columns} data={transformedData} />
         </div>
       </div>
-     </div>
+    </div>
   );
 }

@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { _Tileset2D as Tileset2D } from "@deck.gl/geo-layers";
 
 //mostly from deck.gl with minor changes

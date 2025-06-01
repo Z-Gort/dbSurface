@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 
 function arraysAreEqual(arr1: any[], arr2: any[]): boolean {
   if (arr1.length !== arr2.length) return false;

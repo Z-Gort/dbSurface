@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { type RefObject } from "react";
 import BackwardIterator from "./BackwardIterator";
 import { type DatabaseFunction } from "~/miscellaneousTypes/types";

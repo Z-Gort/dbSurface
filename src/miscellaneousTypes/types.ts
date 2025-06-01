@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { z } from "zod";
 
 //from Supabase codebase

@@ -6,21 +6,20 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
+import { trpc } from "~/lib/client";
 import { getPrecision } from "~/lib/precisionUtils";
 import { useTabContext } from "../providers/TabContext";
 import { Button } from "../ui/button";
-import { ColorBy } from "./ColorBy";
-import { HoverData } from "./HoverData";
-import { ProjectionsDropdown } from "./ProjectionsDropdown";
-import { ResultsSection } from "./ResultsSection";
-import { trpc } from "~/lib/client";
-import { getQueryClient } from "@trpc/react-query/shared";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { ColorBy } from "./ColorBy";
+import { HoverData } from "./HoverData";
+import { ProjectionsDropdown } from "./ProjectionsDropdown";
+import { ResultsSection } from "./ResultsSection";
 
 export function LowerPanel({
   monacoRef,

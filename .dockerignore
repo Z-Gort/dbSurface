@@ -54,8 +54,4 @@ __pycache__/
 src/app/api/inngest
 src/app/api/kinde-webhook
 src/app/api/trpc
-
-src/server/db
-src/server/inngest
-src/server/trpc
-src/server/utils
+src/lib/python

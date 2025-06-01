@@ -149,7 +149,7 @@ export function NewProjectionDialog({ usedTitles }: { usedTitles: string[] }) {
     });
 
     await trpcContext.projections.listActiveDbProjections.invalidate();
-    pollProjectionStatus(newProjection.projectionId);
+    pollProjectionStatus(newProjection!.projectionId);
     setOpen(false);
     setIsLoading(false);
     return;

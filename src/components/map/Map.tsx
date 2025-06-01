@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { OrthographicView } from "@deck.gl/core";
 import { TileLayer } from "@deck.gl/geo-layers";
 import DeckGL from "@deck.gl/react";

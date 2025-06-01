@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm run build      
+RUN corepack enable pnpm && pnpm run build     
 
 # -------------------- 4. runner stage ------------------
 FROM base AS runner

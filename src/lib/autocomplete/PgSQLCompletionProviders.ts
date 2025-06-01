@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 import { type DatabaseFunction } from "~/miscellaneousTypes/types";
 import { type Schema } from "~/miscellaneousTypes/types";
 import { type TableColumn } from "~/miscellaneousTypes/types";

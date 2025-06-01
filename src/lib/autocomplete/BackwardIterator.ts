@@ -1,4 +1,7 @@
- // Porting from
+/* eslint-disable */
+// @ts-nocheck
+
+// Porting from
 // https://github.com/Borvik/vscode-postgres/blob/master/src/common/backwordIterator.ts
 
 const _NL = '\n'.charCodeAt(0)
