@@ -16,8 +16,8 @@
 ### Get Started
 Run: 
 ```bash
-  docker pull zach525/dbsurface
-  docker run -p 4800:3000 zach525/dbsurface:latest
+  docker pull dbsurface/dbsurface
+  docker run -p 4800:3000 dbsurface/dbsurface:latest
   ```
 Then head to http://localhost:4800. You'll be prompted to create an account and then you can get going!
 
