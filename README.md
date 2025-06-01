@@ -30,7 +30,7 @@ If you're missing a feature, have a question, or have found a bug, please open a
 
 How long projection creation takes depends largely on the restricted connection string you input. A few million rows can take anywhere from ~15-55 minutes depending on the concurrent connection limit and database egress bandwith limits. 
 
-We have tested it takes ~5mins to project 500k rows and ~2hrs for 10M rows.
+For reference, we've tested it takes ~5mins to project 500k rows and ~2hrs for 10M rows from a Supabase database with the Small compute add-on.
 
 Also note modifying your schema while a projection is being created may cause creation failure.
 
