@@ -14,8 +14,12 @@
 ---
 
 ### Get Started
-
-(Docker setup)
+Run: 
+```bash
+  docker pull zach525/dbsurface
+  docker run -p 4800:3000 zach525/dbsurface:latest
+  ```
+Then head to http://localhost:4800 and start developing with dbSurface!
 
 ### Support
 
