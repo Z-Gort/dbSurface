@@ -1,6 +1,9 @@
 class QuadTree:
     """Splits (x, y, idx) items into quadtree tiles."""
 
+    # note: this is an impperfect system: if certain parts of the map are 
+    # extremely more dense than others, edge artifacts may show
+
     MAX_TILE_POINTS = 64000
 
     # within the adaptive picks, weight = (1 – BETA) + BETA·(1/ρ^ALPHA)
@@ -8,7 +11,7 @@ class QuadTree:
     ALPHA = 0.1
 
     # fraction of picks to allocate to pure spatial uniformity
-    SPATIAL_FRACTION = 1
+    SPATIAL_FRACTION = 0.85
 
     def __init__(
         self, center_x, center_y, size, items, depth=0
@@ -19,20 +22,16 @@ class QuadTree:
         self.size = size  # distance from center to edge
         self.depth = depth
 
-        print("inited node: ", self.center, self.size)
         self.build(items)
 
     def build(self, items):
-        print("starting build")
         if len(items) <= self.MAX_TILE_POINTS:
             self.nodes = items
             self.children = []
             return
 
         synthetic_sample = self.get_synthetic_sample(items)
-        print("got synthetic sample")
         real_sample = self.snap_to_real(synthetic_sample, items)
-        print("got real sample")
         self.nodes = real_sample
 
         sampled_idxs = {pt[2] for pt in real_sample}
@@ -113,10 +112,8 @@ class QuadTree:
         """
         # Extract coords into an (n,2) array
         coords = np.array([[x, y] for x, y, _ in items])
-        print("About to build kd-tree")
         # Build the KD-tree on those coords
         tree = KDTree(coords, leaf_size=40)
-        print("built kdtree")
 
         #  Query each synthetic point’s nearest neighbor
         #  dists: (M,1), idxs: (M,1) into the coords/items array

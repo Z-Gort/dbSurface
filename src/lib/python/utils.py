@@ -74,7 +74,7 @@ def get_num_shards(total_rows: int, creds) -> int:
     else:
         rows_per_shard = 60_000
 
-    hard_cap = 20
+    hard_cap = 80
 
     free_slots = _free_connection_slots(creds, reserve=5)
 
