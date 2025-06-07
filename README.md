@@ -19,7 +19,7 @@ Run:
   docker pull dbsurface/dbsurface
   docker run -p 4800:3000 dbsurface/dbsurface:latest
   ```
-Then head to http://localhost:4800. You'll be prompted to create an account and then you can get going!
+Then head to http://localhost:4800 and you can get going!
 
 ### Support
 
