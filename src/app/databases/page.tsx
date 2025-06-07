@@ -84,12 +84,12 @@ export default function Databases() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
               className="flex h-36 animate-pulse flex-col rounded-lg border bg-white p-6 shadow"
             >
-
               <div className="mb-2 flex items-start justify-between">
                 <Skeleton className="mt-0.5 h-6 w-24 rounded-md" />
                 <div className="flex space-x-2">

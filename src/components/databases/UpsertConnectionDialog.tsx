@@ -252,7 +252,7 @@ export function UpsertConnectionDialog({
                 Restricted Connection
               </h3>
               <p className="mb-4 text-sm text-muted-foreground">
-                Used by [pgtool] just for projection creation. Only a read-only user is
+                Used by dbSurface just for projection creation. Only a read-only user is
                 necesary. (Must be ipv4 compatible.)
               </p>
               <div className="grid gap-4">
