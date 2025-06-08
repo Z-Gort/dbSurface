@@ -14,12 +14,12 @@
 
 <p align="center">
   <img
-    src="https://github.com/user-attachments/assets/cb75c914-7900-4020-9399-bd60bea563c5"
-    alt="readme"
-    width="600"
+    src="https://github.com/user-attachments/assets/1a288048-f744-41e6-8e71-3805ce39a71a"
+    alt="readmeGif"
+    width="800"
   />
 </p>
----
+
 
 ### Get Started
 Run: 
