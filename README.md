@@ -23,7 +23,7 @@
 ---
 
 
-### Get Started
+## Get Started
 Run: 
 ```bash
   docker pull dbsurface/dbsurface
@@ -31,7 +31,7 @@ Run:
   ```
 Then head to http://localhost:4800 and you can get going!
 
-### Support
+## Support
 
 If you're missing a feature, have a question, or have found a bug, please open a
 [GitHub Issue](https://github.com/Z-Gort/dbSurface/issues/new).
