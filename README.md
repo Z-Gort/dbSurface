@@ -11,6 +11,14 @@
 
 [dbSurface](https://dbsurface.com) is a SQL editor made for pgvector.
 
+
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/cb75c914-7900-4020-9399-bd60bea563c5"
+    alt="readme"
+    width="600"
+  />
+</p>
 ---
 
 ### Get Started
