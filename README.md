@@ -36,7 +36,7 @@ Then head to http://localhost:4800 and you can get going!
 If you're missing a feature, have a question, or have found a bug, please open a
 [GitHub Issue](https://github.com/Z-Gort/dbSurface/issues/new).
 
-### Notes on Projection Creation
+## Notes on Projection Creation
 
 How long projection creation takes depends largely on the restricted connection string you input. A few million rows can take anywhere from ~15-55 minutes depending on the concurrent connection limit and database egress bandwith limits. 
 
