@@ -18,14 +18,15 @@
 </p>
 
 ---
-## Overview
+# dbSurface: _the SQL Editor For Pgvector_ 🐘✨
+No more complex experiments to find the best embedding strategy or fine tune approximate/hybrid queries. Iterate quickly and intuitively by seeing your vectorDB queries and embedding maps for any Postgres table.
 
-*dbSurface is the SQL editor for pgvector*:
+## Features
 
-- Generate interactive 2D projections of your PostgreSQL tables containing vectors  
-- Run SQL queries across the projection (while still querying your database locally)
-- Visualize and compare query results in real time  
-- Assess query precision with built-in metrics  
+- Generate explorable 2D projections of PostgreSQL tables (up to _40 million_ vectors)
+- Visualize PostgresSQL queries across projections
+- Assess query approximate precision with built-in metrics
+- All queries are made locally
 - Work with vector data in an intuitive way! 🚀
 
 ## Get Started
@@ -47,7 +48,7 @@ Then head to http://localhost:4800 and you can get going!
    - Read-only string: Used by our secure cloud worker to grab a snapshot of your table for projection creation
 
 3. **Create a projection**  
-   Our cloud worker pulls the selected table using the read-only string, runs dimensionality reduction on the vector column, adds 2D coordinates, and stores the result as Apache Arrow files.
+   Our cloud worker pulls the selected table using the read-only string, runs dimensionality reduction on the vector column, adds 2D coordinates, and saves the snapshot. (Projecing 1 million rows only takes ~10mins!)
 
 4. **Explore & Query**  
    Your local dashboard streams queries directly from your database in both the SQL editor and projection view.
