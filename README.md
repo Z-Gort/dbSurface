@@ -18,7 +18,7 @@
 </p>
 
 ---
-# dbSurface: _The SQL Editor For Pgvector_ 🐘✨
+# dbSurface: _The SQL Editor For pgvector_ 🐘✨
 No more complex experiments to find the best embedding strategy or fine tune approximate/hybrid queries. Iterate quickly and intuitively by seeing your vectorDB queries and embedding maps for any Postgres table.
 
 ## Features
